@@ -2,42 +2,100 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>PineBank - Seu Banco Digital</title>
+  <title>PineBank - Entre você e suas finanças</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+  <!-- TOPO / HEADER -->
   <header>
-    <div class="logo">🍍 PineBank</div>
-    <nav>
-      <a href="#inicio">Início</a>
-      <a href="#servicos">Serviços</a>
-      <a href="#sobre">Sobre</a>
-      <a href="#contato">Contato</a>
-    </nav>
+    <div class="top-bar">
+      <!-- Espaço para mensagens rápidas ou links menores -->
+      <span>Para empresas / novidades / ajuda</span>
+    </div>
+    <div class="main-header">
+      <div class="logo">🍍 PineBank</div>
+      <nav class="menu-principal">
+        <a href="#produtos">Produtos & Serviços</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#ajuda">Ajuda</a>
+        <a href="#contato">Contato</a>
+      </nav>
+    </div>
   </header>
 
-  <section id="inicio" class="hero">
-    <h1>Bem-vindo ao PineBank</h1>
-    <p>Um banco digital simples, confiável e tropical 🌴</p>
-    <button>Abrir Conta</button>
-  </section>
-
-  <section id="servicos">
-    <h2>Nossos Serviços</h2>
-    <div class="cards">
-      <div class="card">💳 Cartão sem anuidade</div>
-      <div class="card">📱 App intuitivo</div>
-      <div class="card">🌐 Acesso 24h</div>
+  <!-- BANNER / HERO com destaque -->
+  <section class="banner">
+    <div class="banner-texto">
+      <h1>Seu banco digital com leveza e transparência</h1>
+      <p>Modernize sua vida financeira com o PineBank.</p>
+      <button>Abrir Conta</button>
     </div>
   </section>
 
-  <section id="sobre">
-    <h2>Sobre Nós</h2>
-    <p>O PineBank nasceu para simplificar sua vida financeira com tecnologia e leveza tropical.</p>
-  </section>
+  <div class="conteudo-principal">
+    <!-- COLUNA ESQUERDA: links rápidos ou destaques -->
+    <aside class="col-esq">
+      <ul class="destaques">
+        <li><a href="#">Cartão sem anuidade</a></li>
+        <li><a href="#">Investimentos</a></li>
+        <li><a href="#">Empréstimo pessoal</a></li>
+        <li><a href="#">Seguros</a></li>
+      </ul>
+    </aside>
 
-  <footer id="contato">
-    <p>📧 contato@pinebank.com | 🌐 @pinebank</p>
+    <!-- COLUNA CENTRAL: produtos / ofertas -->
+    <main class="col-centro">
+      <section id="produtos" class="produtos">
+        <h2>Destaques e ofertas</h2>
+        <div class="prod-cards">
+          <div class="prod-card">
+            <h3>Conta digital completa</h3>
+            <p>Sem tarifas escondidas</p>
+            <a href="#">Saiba mais »</a>
+          </div>
+          <div class="prod-card">
+            <h3>Cartão Pine</h3>
+            <p>Sem anuidade, controle pelo app</p>
+            <a href="#">Saiba mais »</a>
+          </div>
+          <div class="prod-card">
+            <h3>Investimentos</h3>
+            <p>Seus recursos rendendo sempre</p>
+            <a href="#">Saiba mais »</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="sobre" class="sobre">
+        <h2>Quem somos</h2>
+        <p>O PineBank nasce para trazer uma abordagem humana ao universo financeiro. Transparência, leveza e tecnologia para servir você.</p>
+      </section>
+    </main>
+
+    <!-- COLUNA DIREITA: notícias, chamadas -->
+    <aside class="col-dir">
+      <div class="noticias">
+        <h3>Notícias & Atualizações</h3>
+        <ul>
+          <li><a href="#">Nova funcionalidade no app Pine</a></li>
+          <li><a href="#">Parceria com fintech X</a></li>
+          <li><a href="#">Campanha “Pague com Abacaxi”</a></li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="links-rodape">
+      <a href="#">Termos de Uso</a> | 
+      <a href="#">Privacidade</a> | 
+      <a href="#">Sobre</a> | 
+      <a href="#">Contato</a>
+    </div>
+    <p>&copy; 2025 PineBank. Todos os direitos reservados.</p>
   </footer>
+
 </body>
 </html>
