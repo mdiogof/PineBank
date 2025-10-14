@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transferências | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Estilos adicionais para a página de transferência se necessário, 
+           ou adicione ao style-conta.css */
+        .transfer-form-card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            max-width: 500px;
+            margin: 40px auto; /* Centraliza na página */
+        }
+        .transfer-form-card h2 {
+            color: var(--verde-principal);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: var(--cor-texto);
+        }
+        .input-group input[type="text"],
+        .input-group input[type="number"],
+        .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+        .transfer-button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--amarelo-principal);
+            color: #333;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .transfer-button:hover {
+            background-color: #e6c300;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+                <h3>Pineapple</h3>
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+                <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="#" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="transferir.html" class="nav-item active"><i class="fas fa-exchange-alt"></i> Transferências</a>
+                <a href="#" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                <a href="#" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="transfer-form-card">
+                <h2>Realizar Transferência (PIX)</h2>
+                <form id="transfer-form">
+                    <div class="input-group">
+                        <label for="recipient-account">Destinatário</label>
+                        <select id="recipient-account" required>
+                            </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="transfer-amount">Valor</label>
+                        <input type="number" id="transfer-amount" step="0.01" min="0.01" required placeholder="R$ 0,00">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="transfer-description">Descrição (Opcional)</label>
+                        <input type="text" id="transfer-description" placeholder="Ex: Jantar, Presente, etc.">
+                    </div>
+
+                    <button type="submit" class="transfer-button">Transferir</button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script> 
+</body>
+</html>
