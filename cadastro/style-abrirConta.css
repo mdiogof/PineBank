@@ -1,0 +1,160 @@
+/* 1. Reset Básico e Fontes */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif; 
+}
+
+/* 2. Cores Personalizadas (Tema Pineapple) */
+:root {
+    --amarelo-principal: #FFD700; /* Dourado/Amarelo Abacaxi */
+    --verde-secundario: #4CAF50; /* Verde Folha */
+    --cor-fundo: #f4f4f9;
+    --cor-texto: #333;
+    --cor-borda: #ccc;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px; 
+}
+
+/* 3. Container Principal do Cadastro */
+.cadastro-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px; 
+    text-align: center;
+}
+
+/* 4. Cabeçalho (Header) */
+.header {
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 60px; 
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    color: var(--amarelo-principal);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: var(--cor-texto);
+    font-size: 0.9em;
+}
+
+/* 5. Formulário de Cadastro */
+.cadastro-form h2 {
+    color: var(--cor-texto);
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--cor-texto);
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--amarelo-principal);
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+/* 6. Checkbox de Termos */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    margin: 15px 0 20px 0;
+    justify-content: center;
+}
+
+.checkbox-group input[type="checkbox"] {
+    margin-right: 10px;
+    width: 18px;
+    height: 18px;
+}
+
+.checkbox-group label {
+    font-weight: normal;
+    font-size: 0.95em;
+}
+
+.checkbox-group a {
+    color: var(--verde-secundario);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* 7. Botão de Cadastrar */
+.cadastro-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--amarelo-principal);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.cadastro-button:hover {
+    background-color: #e6c300; 
+}
+
+/* 8. Links Auxiliares (para login) */
+.links-auxiliares {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: var(--cor-texto);
+}
+
+.links-auxiliares a {
+    color: var(--verde-secundario);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.links-auxiliares a:hover {
+    text-decoration: underline;
+}
+
+/* 9. Responsividade */
+@media (max-width: 550px) {
+    .cadastro-container {
+        margin: 10px;
+        padding: 30px 20px;
+}
+}

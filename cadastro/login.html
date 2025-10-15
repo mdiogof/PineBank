@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-login.css">
+    <script src="script-login.js" defer></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="header">
+            <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo">
+        </div>
+
+        <form class="login-form" onsubmit="event.preventDefault(); login();">
+            <h2>Acesse sua conta</h2>
+
+            <div class="input-group">
+                <label for="conta">Conta</label>
+                <input type="text" id="conta" name="conta" required placeholder="12345-6">
+            </div>
+
+            <div class="input-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required placeholder="Digite sua senha de 6 dígitos">
+            </div>
+
+            <button type="submit" class="login-button" onclick="login()">Entrar</button>
+
+            <div class="links-auxiliares">
+                <a href="redefinir-senha.html">Esqueci minha senha</a>
+                <a href="abrir-conta.html">Abrir nova conta</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
