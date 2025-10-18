@@ -1,0 +1,264 @@
+/* Cores do Pineapple */
+:root {
+    --amarelo-principal: #FFD700;
+    --verde-principal: #388e3c;
+    --cor-fundo-claro: #f8f8fa; /* Fundo do Dashboard */
+    --cor-texto: #333;
+    --cor-secundaria: #6c757d;
+    --cor-despesa: #e74c3c; /* Vermelho para despesas */
+    --cor-receita: var(--verde-principal); /* Verde para receitas */
+}
+
+/* Base e Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+body {
+    background-color: var(--cor-fundo-claro);
+    color: var(--cor-texto);
+}
+
+.dashboard-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* 1. Menu Lateral (Sidebar) - Mesma base do Investimentos */
+.sidebar {
+    width: 250px;
+    background-color: #ffffff;
+    padding: 20px 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+}
+.logo-area { text-align: center; margin-bottom: 40px; }
+.logo-small { width: 40px; height: 40px; }
+.logo-area h3 { color: var(--verde-principal); margin-top: 5px; }
+
+.main-nav .nav-item {
+    display: block;
+    padding: 15px 25px;
+    color: var(--cor-secundaria);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+    font-size: 1em;
+}
+.main-nav .nav-item i { margin-right: 10px; }
+.main-nav .nav-item:hover { background-color: #f0f0f5; color: var(--verde-principal); }
+.main-nav .nav-item.active {
+    background-color: var(--amarelo-principal);
+    color: #333;
+    font-weight: bold;
+    border-left: 5px solid var(--verde-principal);
+}
+.main-nav .logout { 
+    color: var(--cor-despesa); 
+    margin-top: 50px; 
+}
+.main-nav .logout:hover { 
+    background-color: #ffe0e0; 
+}
+
+/* 2. Conteúdo Principal */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+}
+
+.main-header {
+    margin-bottom: 30px;
+}
+
+.main-header h1 {
+    color: var(--verde-principal);
+    font-size: 2em;
+    margin-bottom: 5px;
+}
+
+.main-header p {
+    color: var(--cor-secundaria);
+    font-size: 0.9em;
+}
+
+/* 3. Card de Saldo */
+.balance-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+}
+
+.balance-info span {
+    display: block;
+    color: var(--cor-secundaria);
+    font-size: 0.9em;
+    margin-bottom: 5px;
+}
+
+.balance-info h2 {
+    font-size: 2.5em;
+    color: var(--amarelo-principal);
+    font-weight: bold;
+}
+
+.balance-toggle-button {
+    background: none;
+    border: none;
+    color: var(--cor-secundaria);
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: color 0.2s;
+}
+
+.balance-toggle-button:hover {
+    color: var(--verde-principal);
+}
+
+/* 4. Ações Rápidas (Atalhos) */
+.quick-actions {
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100px;
+    height: 100px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.action-item i {
+    font-size: 1.8em;
+    color: var(--verde-principal);
+    margin-bottom: 8px;
+}
+
+.action-item span {
+    font-size: 0.85em;
+    color: var(--cor-texto);
+    font-weight: 500;
+}
+
+/* 5. Últimas Transações */
+.latest-transactions h2 {
+    color: var(--verde-principal);
+    margin-bottom: 15px;
+}
+
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.icon-details {
+    display: flex;
+    align-items: center;
+}
+
+.icon-details i {
+    font-size: 1.2em;
+    margin-right: 15px;
+    width: 30px;
+    text-align: center;
+    padding: 8px;
+    border-radius: 50%;
+    color: #fff;
+}
+
+.icon-details .expense {
+    background-color: var(--cor-despesa);
+}
+
+.icon-details .income {
+    background-color: var(--cor-receita);
+}
+
+.icon-details h4 {
+    font-size: 1em;
+    font-weight: 600;
+}
+
+.icon-details p {
+    font-size: 0.8em;
+    color: var(--cor-secundaria);
+}
+
+.amount {
+    font-weight: bold;
+}
+
+.amount.expense {
+    color: var(--cor-despesa);
+}
+
+.amount.income {
+    color: var(--cor-receita);
+}
+
+.view-all-link {
+    display: block;
+    text-align: right;
+    margin-top: 20px;
+    color: var(--verde-principal);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    .dashboard-container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+        padding: 10px 0;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        order: -1; /* Move para o topo em mobile */
+    }
+    .main-nav {
+        display: flex;
+        overflow-x: auto;
+        justify-content: space-around;
+        padding-bottom: 10px;
+    }
+    .main-nav .nav-item {
+        padding: 10px 15px;
+        border-left: none !important;
+        white-space: nowrap; /* Impede quebra de linha nos itens do menu */
+    }
+    .quick-actions {
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+    .action-item {
+        width: 45%; /* Dois por linha */
+        height: 80px;
+    }
+}

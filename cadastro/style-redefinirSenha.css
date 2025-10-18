@@ -1,0 +1,115 @@
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family: Arial, sans-serif;
+}
+
+:root {
+    --amarelo-principal: #FFD700;
+    --verde-secundario: #4CAF50;
+    --cor-fundo: #f4f4f9;
+    --cor-texto: #333;
+    --cor-borda: #ccc;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.reset-container {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.header {
+    margin-bottom: 30px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.header h1 {
+    color: var(--amarelo-principal);
+    margin-bottom: 5px;
+}
+
+.header p {
+    color: var(--cor-texto);
+    font-size: 0.9em;
+}
+
+.reset-form h2 {
+    color: var(--cor-texto);
+    margin-bottom: 20px;
+    font-weight: 400;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    border-color: var(--amarelo-principal);
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+}
+
+.reset-button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--amarelo-principal);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+}
+
+.reset-button:hover {
+    background-color: #e6c300;
+}
+
+.links-auxiliares {
+    margin-top: 20px;
+}
+
+.links-auxiliares a {
+    color: var(--verde-secundario);
+    text-decoration: none;
+}
+
+.links-auxiliares a:hover {
+    text-decoration: underline;
+}
