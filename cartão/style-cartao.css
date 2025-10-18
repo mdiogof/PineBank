@@ -1,11 +1,11 @@
-/* 🧼 Reset */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 🌿 Corpo */
+/* Corpo */
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: linear-gradient(135deg, #fff8d1, #FFD700); /* degrade suave */
@@ -13,7 +13,7 @@ body {
   min-height: 100vh;
 }
 
-/* 🟨 Cabeçalho fixo simples */
+/* Cabeçalho fixo simples */
 header {
   display: flex;
   justify-content: space-between;
@@ -41,7 +41,7 @@ header nav a:hover {
   text-decoration: underline;
 }
 
-/* 💳 Seção destaque */
+/* Seção destaque */
 .cartao-destaque {
   display: flex;
   justify-content: center;
@@ -53,7 +53,7 @@ header nav a:hover {
   margin: 0 auto;
 }
 
-/* 🌟 Cartão flutuante */
+/* Cartão flutuante */
 .cartao-flutuante {
   position: relative;
   perspective: 1000px; /* para efeito 3D */
@@ -73,7 +73,7 @@ header nav a:hover {
   box-shadow: 0 25px 60px rgba(0,0,0,0.5);
 }
 
-/* 📜 Benefícios elegantes */
+/* Benefícios elegantes */
 .cartao-beneficios {
   max-width: 450px;
 }
@@ -166,9 +166,8 @@ header nav a:hover {
 }
 
 
-/* 🟡 Botão de ação */
+/* Botão de ação */
 .btn-principal {
-  /* Os mesmos estilos do botão antigo */
   padding: 15px 30px;
   background: #333;
   color: #FFD700;
