@@ -12,14 +12,36 @@ body {
   color: #333;
 }
 
-/* Header: barra superior com mensagens */
-.top-bar {
-  background: #f2e6a9;
-  padding: 5px 20px;
-  font-size: 0.9rem;
+/* Header fixo */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  font-family: sans-serif;
+  overflow: hidden; /* garante que nada vaze */
 }
 
-/* Header principal */
+/* Wrapper que contém tudo do header */
+.header-content {
+  transform: translateY(-100%); /* começa escondido acima */
+  transition: transform 0.4s ease;
+}
+
+/* Hover no header — tudo aparece */
+header:hover .header-content {
+  transform: translateY(0); 
+}
+
+/* Main header */
+.logo-img {
+  max-height: 40px; 
+  width: auto; 
+  display: block; 
+}
+
+
 .main-header {
   display: flex;
   justify-content: space-between;
@@ -29,11 +51,7 @@ body {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
+/* Menu */
 .menu-principal a {
   margin-left: 20px;
   color: #333;
@@ -44,27 +62,33 @@ body {
 .menu-principal a:hover {
   text-decoration: underline;
 }
-
 /* Banner principal / hero */
 .banner {
-  background: linear-gradient(135deg, #FFD700, #e6c200);
+  
+  background-image: 
+    linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),  /* camada escura */
+    url('background.png');  /*imagem do fundo*/
   padding: 60px 20px;
   text-align: center;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
 
 .banner-texto h1 {
   font-size: 2.2rem;
   margin-bottom: 10px;
+  color: beige;
 }
 
 .banner-texto p {
   font-size: 1.2rem;
   margin-bottom: 20px;
+  color: beige;
 }
 
 .banner-texto button {
   padding: 12px 25px;
-  background: #333;
+  background: #0000007a;
   color: white;
   border: none;
   border-radius: 25px;

@@ -23,6 +23,7 @@ header {
   box-shadow: 0 2px 10px rgba(0,0,0,0.15);
   position: sticky;
   top: 0;
+  z-index: 100; /* Garante que o cabeçalho fique por cima */
 }
 
 .logo {
@@ -88,22 +89,86 @@ header nav a:hover {
   color: #444;
 }
 
-.cartao-beneficios ul {
-  list-style: none;
-  margin-bottom: 30px;
-}
-
-.cartao-beneficios ul li {
-  font-size: 1.1rem;
-  margin: 10px 0;
-  padding-left: 5px;
+/* Novo contêiner principal */
+.carousel-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
+  margin-bottom: 30px;
+  padding: 0 45px; /* Espaço para os botões não ficarem colados */
 }
 
+/* Contêiner do texto com overflow */
+.beneficios-carousel {
+  overflow: hidden;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.beneficios-slider {
+  list-style: none;
+  position: relative;
+  width: 100%;
+  padding: 0;
+}
+
+.beneficio-item {
+  font-size: 1.1rem;
+  display: none;
+  align-items: center;
+  justify-content: center; /* Centraliza o texto */
+  gap: 8px;
+  animation: fadeIn 0.5s;
+  text-align: center; /* Garante alinhamento central */
+  height: 100%;
+}
+
+.beneficio-item.ativo {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Estilo e posicionamento dos botões */
+#btn-anterior, #btn-proximo {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #333;
+  color: #FFD700;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  z-index: 10;
+}
+
+#btn-anterior {
+  left: 0;
+}
+
+#btn-proximo {
+  right: 0;
+}
+
+#btn-anterior:hover, #btn-proximo:hover {
+  background: #555;
+}
+
+
 /* 🟡 Botão de ação */
-.cartao-beneficios button {
+.btn-principal {
+  /* Os mesmos estilos do botão antigo */
   padding: 15px 30px;
   background: #333;
   color: #FFD700;
@@ -114,9 +179,16 @@ header nav a:hover {
   cursor: pointer;
   box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   transition: background 0.2s, transform 0.2s;
+  display: block;
+  margin: 20px auto 0 auto; /* Adicionei um margin-top para desgrudar do carrossel */
+
+  /* Estilos específicos para a tag <a> */
+  text-decoration: none; /* Remove o sublinhado do link */
+  text-align: center; /* Centraliza o texto caso o display block mude o alinhamento */
 }
 
-.cartao-beneficios button:hover {
+.btn-principal:hover {
   background: #555;
   transform: translateY(-2px);
+  color: #FFD700; /* Garante que a cor do texto não mude no hover */
 }

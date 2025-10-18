@@ -7,7 +7,6 @@
 </head>
 <body>
 
-  <!-- 🔸 Cabeçalho simples -->
   <header>
     <div class="logo">🍍 PineBank</div>
     <nav>
@@ -15,29 +14,34 @@
     </nav>
   </header>
 
-  <!-- 💳 Seção principal -->
   <section class="cartao-destaque">
-    <!-- 🖼️ Cartão flutuante -->
     <div class="cartao-flutuante">
       <img src="cartões sem fundo.png" alt="Cartão PineBank">
     </div>
 
-    <!-- 📜 Benefícios -->
     <div class="cartao-beneficios">
       <h1>Cartão PineBank</h1>
       <p>Elegância, benefícios e controle total na palma da sua mão.</p>
 
-      <ul>
-        <li>💳 Cartão de Débito e Crédito em um só</li>
-        <li>📱 Controle pelo app com limite inteligente</li>
-        <li>🌍 Aceito internacionalmente</li>
-        <li>🏆 Cashback e benefícios exclusivos</li>
-        <li>🔒 Segurança com tecnologia sem contato</li>
-      </ul>
-
-      <button>Peça o seu 🍍</button>
+      <div class="carousel-wrapper">
+        <button id="btn-anterior">←</button>
+        <div class="beneficios-carousel">
+          <ul class="beneficios-slider">
+            <li class="beneficio-item ativo">💳 Cartão de Débito e Crédito em um só</li>
+            <li class="beneficio-item">📱 Controle pelo app com limite inteligente</li>
+            <li class="beneficio-item">🌍 Aceito internacionalmente</li>
+            <li class="beneficio-item">🏆 Cashback e benefícios exclusivos</li>
+            <li class="beneficio-item">🔒 Segurança com tecnologia sem contato</li>
+          </ul>
+        </div>
+        <button id="btn-proximo">→</button>
+      </div>
+      <a href="../cadastro/cadastro.html" class="btn-principal">Peça o seu 🍍</a>
+    </div>
+  </section>
     </div>
   </section>
 
+  <script src="carrosel.js"></script>
 </body>
 </html>
