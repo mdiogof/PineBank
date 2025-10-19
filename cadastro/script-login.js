@@ -1,18 +1,18 @@
-////////////////////////////// LOGIN //////////////////////////////
+////////////////////////////// LOGIN - ADAPTADO PARA APENAS CONTA E SENHA //////////////////////////////
 
-// Seleção do formulário e campos
-const formLogin = document.querySelector('.login-form');
-const inputConta = document.getElementById('conta');
-const inputSenha = document.getElementById('senha');
+// A agência será fixada para simplificar
+const AGENCY_ID = '0001'; 
 
-// Formata conta para exibição: 123456 -> 12345-6
-function formatarConta(conta) {
-    const str = conta.toString().padStart(6, '0');
-    return `${str.slice(0, 5)}-${str.slice(5)}`;
+// Função para desformatar conta para pesquisa: 12345-6 -> 123456
+function desformatarConta(contaFormatada) {
+    return contaFormatada.replace(/[^\d]/g, '').padStart(6, '0');
 }
 
 // Função para mostrar mensagem de erro ou sucesso
 function mostrarMensagem(msg, tipo = 'erro') {
+    const formLogin = document.querySelector('.login-form');
+    if (!formLogin) return; 
+
     const mensagemAntiga = document.querySelector('.mensagem-login');
     if (mensagemAntiga) mensagemAntiga.remove();
 
@@ -21,52 +21,88 @@ function mostrarMensagem(msg, tipo = 'erro') {
     divMsg.textContent = msg;
 
     formLogin.prepend(divMsg);
-
-    // Remove automaticamente após 5s
     setTimeout(() => divMsg.remove(), 5000);
 }
 
-// Função de login
-function login() {
-    const contaDigitada = inputConta.value.trim();
+
+// Função de login (agora centralizando a lógica de teste e cadastro)
+function login(e) {
+    e.preventDefault(); 
+    
+    // Seleção dos campos DENTRO da função de evento
+    const inputConta = document.getElementById('conta');
+    const inputSenha = document.getElementById('senha');
+    
+    const contaFormatadaDigitada = inputConta.value.trim();
     const senhaDigitada = inputSenha.value;
 
-    if (!contaDigitada || !senhaDigitada) {
+    if (!contaFormatadaDigitada || !senhaDigitada) {
         mostrarMensagem('Preencha todos os campos!');
         return;
     }
+    
+    const contaPuraDigitada = desformatarConta(contaFormatadaDigitada); 
+    const accountKey = `${AGENCY_ID}-${contaPuraDigitada}`; 
 
-    // Busca usuários cadastrados
-    const usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+    let usuarioEncontrado = null;
+    
+    // Busca os dados do sistema (Chama a função global)
+    const bankData = window.loadBankData ? window.loadBankData() : null; 
+    
+    if (!bankData) {
+        mostrarMensagem('Erro de sistema: Dados não carregados. Verifique o console.');
+        return;
+    }
 
-    // Procura usuário pela conta (comparando formato)
-    const usuarioEncontrado = usuarios.find(u => formatarConta(u.conta) === contaDigitada);
-
+    // 1. TENTA LOGAR COM AS CONTAS DE TESTE
+    if (bankData.accounts[accountKey] && senhaDigitada === '123') {
+        usuarioEncontrado = bankData.accounts[accountKey];
+        usuarioEncontrado.agencia = AGENCY_ID;
+        usuarioEncontrado.conta = contaPuraDigitada;
+    } 
+    
+    // 2. TENTA LOGAR COM USUÁRIOS NOVOS CADASTRADOS
     if (!usuarioEncontrado) {
-        mostrarMensagem('Conta não encontrada!');
-        inputConta.focus();
-        return;
+        const usuariosCadastrados = JSON.parse(localStorage.getItem('usuarios')) || [];
+        
+        usuarioEncontrado = usuariosCadastrados.find(u => 
+            u.conta.toString() === contaPuraDigitada && u.senha === senhaDigitada
+        );
+
+        if (!usuarioEncontrado) {
+             mostrarMensagem('Conta e/ou senha não conferem. Verifique os dados!');
+             inputConta.focus();
+             return;
+        }
     }
+    
+    // 3. LOGIN BEM-SUCEDIDO: Configura e Salva o usuário logado
+    const contaLogada = {
+        nome: usuarioEncontrado.owner || usuarioEncontrado.nome,
+        agencia: usuarioEncontrado.agencia || AGENCY_ID,
+        conta: usuarioEncontrado.account || usuarioEncontrado.conta
+    };
 
-    // Verifica senha
-    if (usuarioEncontrado.senha !== senhaDigitada) {
-        mostrarMensagem('Senha incorreta!');
-        inputSenha.focus();
-        return;
-    }
+    localStorage.setItem('usuarioLogado', JSON.stringify(contaLogada));
+    mostrarMensagem(`Bem-vindo, ${contaLogada.nome.split(' ')[0]}! Redirecionando...`, 'sucesso');
 
-    // Login bem-sucedido
-    localStorage.setItem('usuarioLogado', JSON.stringify(usuarioEncontrado));
-    mostrarMensagem(`Bem-vindo, ${usuarioEncontrado.nome}! Redirecionando...`, 'sucesso');
-
-    // Redireciona para dashboard/conta.html
     setTimeout(() => {
         window.location.href = 'conta.html';
     }, 1000);
 }
 
-// Permitir Enter no teclado para enviar
-formLogin.addEventListener('submit', e => {
-    e.preventDefault();
-    login();
+
+// EVENT LISTENER CRÍTICO: Anexa o evento de login apenas quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', () => {
+    const formLogin = document.querySelector('.login-form');
+    
+    // Inicialização do Sistema (Para garantir que os dados estejam prontos)
+    if (window.loadBankData && typeof window.loadBankData === 'function') {
+        window.loadBankData(); 
+    }
+
+    if (formLogin) {
+        // Anexa a função 'login' que contém o e.preventDefault()
+        formLogin.addEventListener('submit', login); 
+    }
 });

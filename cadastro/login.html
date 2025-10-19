@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login | Banco Pineapple</title>
     <link rel="stylesheet" href="style-login.css">
-    <script src="script-login.js" defer></script>
+    
+    <script src="bank-system.js"></script> 
 </head>
 <body>
     <div class="login-container">
@@ -13,7 +14,7 @@
             <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo">
         </div>
 
-        <form class="login-form" onsubmit="event.preventDefault(); login();">
+        <form class="login-form">
             <h2>Acesse sua conta</h2>
 
             <div class="input-group">
@@ -26,7 +27,7 @@
                 <input type="password" id="senha" name="senha" required placeholder="Digite sua senha de 6 dígitos">
             </div>
 
-            <button type="submit" class="login-button" onclick="login()">Entrar</button>
+            <button type="submit" class="login-button">Entrar</button>
 
             <div class="links-auxiliares">
                 <a href="redefinir-senha.html">Esqueci minha senha</a>
@@ -34,6 +35,7 @@
             </div>
         </form>
     </div>
+
+    <script src="script-login.js"></script>
 </body>
 </html>
-

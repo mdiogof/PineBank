@@ -1,15 +1,17 @@
-/* Cores do Pineapple */
+/* ---------------------------------------------------------------------- */
+/* 1. Variáveis de Cor (Tema Pineapple) e Reset Básico */
+/* ---------------------------------------------------------------------- */
 :root {
-    --amarelo-principal: #FFD700;
-    --verde-principal: #388e3c;
-    --cor-fundo-claro: #f8f8fa; /* Fundo do Dashboard */
+    --amarelo-principal: #FFD700;    /* Dourado/Amarelo Abacaxi */
+    --verde-principal: #388e3c;      /* Verde Escuro (Folha) */
+    --cor-receita: #4CAF50;          /* Verde para ganhos (Crédito) */
+    --cor-despesa: #E74C3C;          /* Vermelho para perdas (Débito) */
+    --cor-fundo-claro: #f8f8fa;
     --cor-texto: #333;
-    --cor-secundaria: #6c757d;
-    --cor-despesa: #e74c3c; /* Vermelho para despesas */
-    --cor-receita: var(--verde-principal); /* Verde para receitas */
+    --cor-secundaria: #6c757d;       /* Texto auxiliar */
+    --cor-borda: #eee;
 }
 
-/* Base e Reset */
 * {
     margin: 0;
     padding: 0;
@@ -22,21 +24,36 @@ body {
     color: var(--cor-texto);
 }
 
+/* Container Principal e Layout Flexível */
 .dashboard-container {
     display: flex;
     min-height: 100vh;
 }
 
-/* 1. Menu Lateral (Sidebar) - Mesma base do Investimentos */
+/* ---------------------------------------------------------------------- */
+/* 2. Menu Lateral (Sidebar) */
+/* ---------------------------------------------------------------------- */
 .sidebar {
     width: 250px;
     background-color: #ffffff;
     padding: 20px 0;
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
 }
-.logo-area { text-align: center; margin-bottom: 40px; }
-.logo-small { width: 40px; height: 40px; }
-.logo-area h3 { color: var(--verde-principal); margin-top: 5px; }
+
+.logo-area {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.logo-small {
+    width: 40px;
+    height: 40px;
+}
+
+.logo-area h3 {
+    color: var(--verde-principal);
+    margin-top: 5px;
+}
 
 .main-nav .nav-item {
     display: block;
@@ -46,14 +63,23 @@ body {
     transition: background-color 0.2s, color 0.2s;
     font-size: 1em;
 }
-.main-nav .nav-item i { margin-right: 10px; }
-.main-nav .nav-item:hover { background-color: #f0f0f5; color: var(--verde-principal); }
+
+.main-nav .nav-item i {
+    margin-right: 10px;
+}
+
+.main-nav .nav-item:hover {
+    background-color: #f0f0f5;
+    color: var(--verde-principal);
+}
+
 .main-nav .nav-item.active {
     background-color: var(--amarelo-principal);
-    color: #333;
+    color: var(--cor-texto);
     font-weight: bold;
     border-left: 5px solid var(--verde-principal);
 }
+
 .main-nav .logout { 
     color: var(--cor-despesa); 
     margin-top: 50px; 
@@ -62,7 +88,10 @@ body {
     background-color: #ffe0e0; 
 }
 
-/* 2. Conteúdo Principal */
+
+/* ---------------------------------------------------------------------- */
+/* 3. Conteúdo Principal e Header */
+/* ---------------------------------------------------------------------- */
 .main-content {
     flex-grow: 1;
     padding: 30px;
@@ -83,7 +112,10 @@ body {
     font-size: 0.9em;
 }
 
-/* 3. Card de Saldo */
+
+/* ---------------------------------------------------------------------- */
+/* 4. Card de Saldo */
+/* ---------------------------------------------------------------------- */
 .balance-card {
     display: flex;
     justify-content: space-between;
@@ -121,7 +153,9 @@ body {
     color: var(--verde-principal);
 }
 
-/* 4. Ações Rápidas (Atalhos) */
+/* ---------------------------------------------------------------------- */
+/* 5. Ações Rápidas (Atalhos) */
+/* ---------------------------------------------------------------------- */
 .quick-actions {
     display: flex;
     justify-content: space-around;
@@ -160,78 +194,165 @@ body {
     font-weight: 500;
 }
 
-/* 5. Últimas Transações */
+/* ---------------------------------------------------------------------- */
+/* 6. Últimas Transações (Extrato) */
+/* ---------------------------------------------------------------------- */
 .latest-transactions h2 {
     color: var(--verde-principal);
     margin-bottom: 15px;
 }
 
+.transaction-list {
+    list-style: none; /* Remove marcadores padrão de lista */
+    padding: 0;
+}
+
 .transaction-item {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
     background-color: #ffffff;
     padding: 15px;
     border-radius: 8px;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
 }
 
-.icon-details {
+.transaction-icon {
     display: flex;
     align-items: center;
-}
-
-.icon-details i {
-    font-size: 1.2em;
-    margin-right: 15px;
-    width: 30px;
-    text-align: center;
-    padding: 8px;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
-    color: #fff;
+    margin-right: 15px;
+    font-size: 0.9em;
 }
 
-.icon-details .expense {
-    background-color: var(--cor-despesa);
+.transaction-details {
+    flex-grow: 1; /* Permite que os detalhes ocupem o espaço central */
+    display: flex;
+    flex-direction: column;
 }
 
-.icon-details .income {
-    background-color: var(--cor-receita);
-}
-
-.icon-details h4 {
-    font-size: 1em;
+.transaction-details .description {
     font-weight: 600;
+    font-size: 1em;
 }
 
-.icon-details p {
+.transaction-details .date {
     font-size: 0.8em;
     color: var(--cor-secundaria);
 }
 
-.amount {
+/* Cores de Ganhos/Perdas (Débito/Crédito) */
+
+.transaction-item .amount {
     font-weight: bold;
-}
-
-.amount.expense {
-    color: var(--cor-despesa);
-}
-
-.amount.income {
-    color: var(--cor-receita);
-}
-
-.view-all-link {
-    display: block;
     text-align: right;
-    margin-top: 20px;
+    min-width: 100px; 
+}
+
+/* 🟢 CRÉDITO (Ganhos/Receita) */
+.transaction-item .amount.credit {
+    color: var(--cor-receita); 
+}
+.transaction-icon .fa-arrow-up {
+    color: #fff;
+    background-color: var(--cor-receita);
+    padding: 8px; 
+    border-radius: 50%;
+}
+
+/* 🔴 DÉBITO (Perdas/Despesa) */
+.transaction-item .amount.debit {
+    color: var(--cor-despesa); 
+}
+.transaction-icon .fa-arrow-down {
+    color: #fff;
+    background-color: var(--cor-despesa);
+    padding: 8px; 
+    border-radius: 50%;
+}
+
+/* Estilo do link "Ver todo o Extrato" */
+.transaction-list .view-all-link-item {
+    text-align: right;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid var(--cor-borda); 
+}
+
+.transaction-list .view-all-link-item a {
     color: var(--verde-principal);
     text-decoration: none;
     font-weight: 600;
+    font-size: 0.9em;
 }
 
-/* Responsividade Básica */
+.transaction-list .view-all-link-item a:hover {
+    text-decoration: underline;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* 7. Estilos para a página de Transferência (Reaproveitando o CSS) */
+/* ---------------------------------------------------------------------- */
+.transfer-form-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 500px;
+    margin: 40px auto; 
+}
+
+.transfer-form-card h2 {
+    color: var(--verde-principal);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--cor-texto);
+}
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+.transfer-button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.transfer-button:hover {
+    background-color: #e6c300;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* 8. Responsividade */
+/* ---------------------------------------------------------------------- */
 @media (max-width: 768px) {
     .dashboard-container {
         flex-direction: column;
@@ -240,7 +361,7 @@ body {
         width: 100%;
         padding: 10px 0;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-        order: -1; /* Move para o topo em mobile */
+        order: -1; 
     }
     .main-nav {
         display: flex;
@@ -251,14 +372,72 @@ body {
     .main-nav .nav-item {
         padding: 10px 15px;
         border-left: none !important;
-        white-space: nowrap; /* Impede quebra de linha nos itens do menu */
+        white-space: nowrap; 
     }
     .quick-actions {
         flex-wrap: wrap;
         justify-content: space-between;
     }
     .action-item {
-        width: 45%; /* Dois por linha */
+        width: 45%; 
         height: 80px;
     }
+    .transfer-form-card {
+        margin: 20px;
+    }
+}
+/* ---------------------------------------------------------------------- */
+/* 7. Estilos para a página de Transferência (Reaproveitando o CSS) */
+/* ---------------------------------------------------------------------- */
+.transfer-form-card {
+    /* Centraliza e dá o estilo de card */
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 500px;
+    margin: 40px auto; 
+}
+
+.transfer-form-card h2 {
+    color: var(--verde-principal);
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--cor-texto);
+}
+.input-group input[type="text"],
+.input-group input[type="number"],
+.input-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+.transfer-button {
+    width: 100%;
+    padding: 15px;
+    /* Usa a cor amarela do Pineapple */
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto);
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.transfer-button:hover {
+    background-color: #e6c300;
 }
