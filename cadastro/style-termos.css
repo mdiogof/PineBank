@@ -1,0 +1,201 @@
+/* Cores do Pineapple (Repita as cores do seu tema) */
+:root {
+    --amarelo-principal: #FFD700; 
+    --verde-principal: #388e3c;   
+    --cor-fundo-claro: #f4f4f9;
+    --cor-texto: #333;
+    --cor-secundaria: #6c757d;
+}
+
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+body {
+    background-color: #ffffff; 
+    color: var(--cor-texto);
+}
+
+/* 1. Header da Página */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    border-bottom: 1px solid #eee;
+    background-color: #fff;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.logo-area {
+    display: flex;
+    align-items: center;
+}
+
+.logo-small {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.page-header h1 {
+    font-size: 1.2em;
+    color: var(--verde-principal);
+}
+
+.btn-voltar {
+    background-color: var(--amarelo-principal);
+    color: #333;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 50px;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.btn-voltar:hover {
+    background-color: #e6c300;
+}
+
+/* 2. Layout Principal (Duas Colunas) */
+.content-wrapper {
+    display: flex;
+    max-width: 1200px;
+    margin: 30px auto;
+    background-color: var(--cor-fundo-claro);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* 3. Sumário / Sidebar */
+.sidebar-termos {
+    width: 25%;
+    min-width: 220px;
+    padding: 30px 20px;
+    background-color: #ffffff;
+    border-right: 1px solid #eee;
+}
+
+.sidebar-termos h2 {
+    color: var(--verde-principal);
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    border-bottom: 2px solid var(--amarelo-principal);
+    padding-bottom: 10px;
+}
+
+.sumario-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item-termo {
+    text-decoration: none;
+    color: var(--cor-secundaria);
+    padding: 10px 0;
+    font-size: 0.95em;
+    border-left: 3px solid transparent;
+    padding-left: 10px;
+    transition: all 0.2s;
+}
+
+.nav-item-termo:hover,
+.nav-item-termo.active {
+    color: var(--verde-principal);
+    font-weight: bold;
+    border-left: 3px solid var(--verde-principal);
+    background-color: #f0f0f5;
+}
+
+/* 4. Conteúdo dos Termos */
+.termos-content {
+    flex-grow: 1;
+    padding: 30px 40px;
+}
+
+.main-title {
+    color: var(--verde-principal);
+    font-size: 2.2em;
+    margin-bottom: 10px;
+}
+
+.data-revisao {
+    color: var(--cor-secundaria);
+    font-style: italic;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.termo-section {
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.termo-section h2 {
+    color: var(--amarelo-principal);
+    font-size: 1.6em;
+    margin-bottom: 15px;
+}
+
+.termo-section h3 {
+    color: var(--cor-texto);
+    font-size: 1.1em;
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.termo-section p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    color: #555;
+    text-align: justify;
+}
+
+.aceite-final {
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--verde-principal);
+}
+
+.call-to-action {
+    font-weight: bold;
+    color: var(--verde-principal);
+    font-size: 1.1em;
+}
+
+
+/* 5. Responsividade (Celular) */
+@media (max-width: 768px) {
+    .content-wrapper {
+        flex-direction: column;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    .sidebar-termos {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #eee;
+        padding: 20px;
+    }
+
+    .termos-content {
+        padding: 20px;
+    }
+
+    .main-title {
+        font-size: 1.8em;
+    }
+}
