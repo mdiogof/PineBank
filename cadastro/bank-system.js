@@ -1,21 +1,21 @@
 'use strict';
 
 // ----------------------------------------------------------------------
-// 1. DADOS INICIAIS DE SIMULAÇÃO (CONTAS DE TESTE) - DATAS PADRONIZADAS
+// 1. DADOS INICIAIS DE SIMULAÇÃO (CONTAS DE TESTE)
 // ----------------------------------------------------------------------
 
-// Formato de data padronizado: "DD/MM/AAAA HH:MM"
 const initialBankData = {
     accounts: {
         "0001-123456": {
             owner: "Brendo Ryan Da Costa Manoel",
             agency: "0001",
             account: "123456",
-            balance: 5750.22,
+            balance: 4150.22, 
             transactions: [
-                // Datas no formato STRING (igual ao transferHandler)
                 { id: 1, type: "debit", amount: 150.00, description: "Compra Online Magazine", date: "18/10/2025 10:00" },
                 { id: 2, type: "credit", amount: 2500.00, description: "Salário Setembro", date: "15/10/2025 12:00" },
+                { id: 3, type: "debit", amount: 1000.00, description: "Pix para Diogo - presente", date: "18/10/2025 10:00" },
+                { id: 4, type: "debit", amount: 500.00, description: "Pix para Diogo - presente", date: "18/10/2025 10:00" },
             ]
         },
         "0001-654321": {
@@ -59,13 +59,17 @@ function getCurrentAccount() {
     const loggedUser = JSON.parse(localStorage.getItem('usuarioLogado'));
 
     if (loggedUser) {
-        const accountKey = `${loggedUser.agencia}-${loggedUser.conta}`;
+        // CORREÇÃO DA AGÊNCIA: Garante que a agência e conta sejam strings, usando 0001 como fallback
+        const agencia = loggedUser.agencia ? loggedUser.agencia.toString().padStart(4, '0') : "0001";
+        const conta = loggedUser.conta ? loggedUser.conta.toString().padStart(6, '0') : loggedUser.account.toString().padStart(6, '0');
+
+        const accountKey = `${agencia}-${conta}`;
         
         if (!bankData.accounts[accountKey]) {
              bankData.accounts[accountKey] = {
                  owner: loggedUser.nome,
-                 agency: loggedUser.agencia,
-                 account: loggedUser.conta,
+                 agency: agencia,
+                 account: conta,
                  balance: 0.00, 
                  transactions: []
              };
@@ -79,7 +83,7 @@ function getCurrentAccount() {
     return null; 
 }
 
-// Expõe funções globalmente (Correção de escopo)
+// Expõe funções globalmente
 window.loadBankData = loadBankData;
 window.saveBankData = saveBankData;
 window.getCurrentAccount = getCurrentAccount;
@@ -92,12 +96,9 @@ window.getCurrentAccount = getCurrentAccount;
 function transferHandler(e) {
     e.preventDefault();
 
-    // 1. Coleta e Validação dos Dados
     const recipientAccKey = document.getElementById('recipient-select').value;
     const amountInput = document.getElementById('transfer-amount').value.replace(',', '.');
     const amount = parseFloat(amountInput);
-    
-    // Descrição padrão se o campo estiver vazio
     const description = document.getElementById('transfer-description').value.trim() || 'Transferência'; 
 
     if (!recipientAccKey || isNaN(amount) || amount <= 0) {
@@ -105,7 +106,6 @@ function transferHandler(e) {
         return;
     }
 
-    // 2. Carrega e verifica o saldo
     let bankData = loadBankData();
     let allAccounts = bankData.accounts;
     const currentAccountKey = JSON.parse(localStorage.getItem('usuarioLogado')).agencia + '-' + JSON.parse(localStorage.getItem('usuarioLogado')).conta;
@@ -118,12 +118,11 @@ function transferHandler(e) {
 
     const recipientAccount = allAccounts[recipientAccKey];
     
-    // 3. Realiza o Débito e Crédito (Simulação)
+    // Realiza o Débito e Crédito (Simulação)
     currentUser.balance = parseFloat((currentUser.balance - amount).toFixed(2));
     recipientAccount.balance = parseFloat((recipientAccount.balance + amount).toFixed(2));
 
     const date = new Date();
-    // Padroniza o formato de data (DD/MM/AAAA HH:MM)
     const dateStr = date.toLocaleDateString('pt-BR') + ' ' + date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
     const transactionId = Date.now();
     
@@ -148,19 +147,17 @@ function transferHandler(e) {
         date: dateStr
     });
 
-    // 4. Salva as alterações no Local Storage
     bankData.accounts = allAccounts;
     saveBankData(bankData);
     
-    // 5. Feedback e Redirecionamento
     alert(`PIX de ${formatCurrency(amount)} para ${recipientAccount.owner} realizado com sucesso!`);
     window.location.href = 'conta.html';
 }
 
-window.transferHandler = transferHandler; // Expor globalmente
+window.transferHandler = transferHandler; 
 
 // ----------------------------------------------------------------------
-// 4. FUNÇÕES DE RENDERIZAÇÃO
+// 4. FUNÇÕES DE RENDERIZAÇÃO E EXTRATO COMPLETO (Corrigidas)
 // ----------------------------------------------------------------------
 
 function formatCurrency(amount) {
@@ -198,7 +195,6 @@ function displayLastTransactions(account) {
     listEl.innerHTML = ''; 
 
     const transactions = account.transactions.sort((a, b) => {
-        // Ordenação por data (a mais recente primeiro)
         const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(a.date);
         const dateB = typeof b.date === 'string' ? new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
         return dateB - dateA;
@@ -215,9 +211,8 @@ function displayLastTransactions(account) {
         const iconClass = t.type === 'credit' ? 'fa-arrow-up' : 'fa-arrow-down';
         const amountClass = t.type === 'credit' ? 'credit' : 'debit';
         
-        // A data agora é usada como STRING, não formatada como objeto Date inválido
         const formattedDate = (typeof t.date === 'string') 
-            ? t.date.split(' ')[0] // Pega apenas DD/MM/AAAA
+            ? t.date.split(' ')[0] 
             : new Date(t.date).toLocaleDateString('pt-BR');
         
         li.className = 'transaction-item';
@@ -236,7 +231,7 @@ function displayLastTransactions(account) {
 
     const viewAllLi = document.createElement('li');
     viewAllLi.className = 'view-all-link-item';
-    viewAllLi.innerHTML = `<a href="#">Ver todo o Extrato</a>`;
+    viewAllLi.innerHTML = `<a href="extrato.html">Ver todo o Extrato</a>`;
     listEl.appendChild(viewAllLi);
 }
 
@@ -270,9 +265,67 @@ function loadRecipients(currentAccount) {
     }
 }
 
+// FUNÇÃO DE EXTRATO COMPLETO (Inclui filtros)
+function renderFullExtrato(account, filters = {}) {
+    const listEl = document.getElementById('full-extrato-list');
+    const summaryEl = document.getElementById('extrato-summary');
+    if (!listEl || !summaryEl) return;
+
+    listEl.innerHTML = '';
+    
+    let transactions = account.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+    let totalDebit = 0;
+    let totalCredit = 0;
+    
+    const filteredTransactions = transactions.filter(t => {
+        const typeMatch = filters.type === 'all' || !filters.type || t.type === filters.type;
+        // Lógica para o filtro de mês/período seria adicionada aqui, se necessário.
+        return typeMatch;
+    });
+
+
+    if (filteredTransactions.length === 0) {
+        listEl.innerHTML = '<li class="no-transactions">Nenhuma transação encontrada com os filtros aplicados.</li>';
+        summaryEl.textContent = 'Nenhuma transação no período.';
+        return;
+    }
+    
+    filteredTransactions.forEach(t => {
+        const typeClass = t.type === 'credit' ? 'credit' : 'debit';
+        const amountClass = t.type === 'credit' ? 'credit' : 'debit';
+        const formattedDate = (typeof t.date === 'string') 
+            ? t.date.split(' ')[0] 
+            : new Date(t.date).toLocaleDateString('pt-BR');
+            
+        const li = document.createElement('li');
+        li.className = 'transaction-item extrato-full-item';
+
+        li.innerHTML = `
+            <div class="transaction-icon"><i class="fas ${t.type === 'credit' ? 'fa-arrow-up' : 'fa-arrow-down'}"></i></div>
+            <div class="transaction-details-extrato">
+                <span class="description">${t.description}</span>
+                <span class="date">${formattedDate}</span>
+            </div>
+            <span class="amount ${amountClass}">
+                ${t.type === 'debit' ? '-' : '+'} ${formatCurrency(t.amount).replace('R$', '')}
+            </span>
+        `;
+        listEl.appendChild(li);
+        
+        if (t.type === 'debit') {
+            totalDebit += t.amount;
+        } else {
+            totalCredit += t.amount;
+        }
+    });
+
+    summaryEl.textContent = `Total de Despesas: ${formatCurrency(totalDebit)} | Total de Receitas: ${formatCurrency(totalCredit)}`;
+}
+
 
 // ----------------------------------------------------------------------
-// 5. INICIALIZAÇÃO DE PÁGINA
+// 7. INICIALIZAÇÃO DE PÁGINA
 // ----------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -280,13 +333,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     const isContaPage = document.body.classList.contains('page-conta');
     const isTransferPage = document.body.classList.contains('page-transferencia');
+    const isExtratoPage = document.body.classList.contains('page-extrato'); 
 
-    if (!currentAccount && (isContaPage || isTransferPage)) {
+    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage)) {
         window.location.href = 'login.html';
         return;
     }
 
     if (currentAccount) {
+        // Lógica para conta.html (Dashboard)
         if (isContaPage) {
             const greetingEl = document.getElementById('user-greeting');
             const accountInfoEl = document.querySelector('.main-header p');
@@ -305,6 +360,7 @@ document.addEventListener('DOMContentLoaded', () => {
             displayLastTransactions(currentAccount);
         }
 
+        // Lógica para transferir.html
         if (isTransferPage) {
             loadRecipients(currentAccount);
             
@@ -312,6 +368,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (transferForm) {
                 transferForm.addEventListener('submit', transferHandler); 
             }
+        }
+        
+        // Lógica para extrato.html
+        if (isExtratoPage) {
+            const accountInfoEl = document.querySelector('#account-info');
+            const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
+            
+            // Corrige o header na página Extrato
+            if (accountInfoEl) {
+                 accountInfoEl.textContent = `Agência: ${currentAccount.agencia} | Conta: ${formattedAccount}`;
+            }
+
+            const applyButton = document.getElementById('apply-filters');
+            if (applyButton) {
+                applyButton.addEventListener('click', () => {
+                    const typeFilter = document.getElementById('filter-type').value;
+                    renderFullExtrato(currentAccount, { type: typeFilter });
+                });
+            }
+            // Inicializa o extrato completo
+            renderFullExtrato(currentAccount, { type: 'all' });
         }
     }
 });

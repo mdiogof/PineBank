@@ -1,72 +1,74 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
- <title>Início | Banco Pineapple</title>
- <link rel="stylesheet" href="style-conta.css">
- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Início | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body class="page-conta"> 
-<div class="dashboard-container">
+    <div class="dashboard-container">
 
-<aside class="sidebar">
-<div class="logo-area">
-<img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
-<h3>Pineapple</h3>
-</div>
- <nav class="main-nav">
-<a href="conta.html" class="nav-item active"><i class="fas fa-home"></i> Início</a>
-<a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
-<a href="#" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
- <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a> 
-<a href="#" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
-<a href="login.html" id="logout-btn" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
- </nav>
- </aside>
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+                <h3>Pineapple</h3>
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item active"><i class="fas fa-home"></i> Início</a>
+                <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="#" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a> 
+                
+                <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                
+                <a href="login.html" id="logout-btn" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
 
-<main class="main-content">
- <header class="main-header">
-<h1 id="user-greeting">Olá! 👋</h1> 
- <p>Agência: ---- | Conta: -----</p> </header>
+        <main class="main-content">
+            <header class="main-header">
+                <h1 id="user-greeting">Olá! 👋</h1> 
+                <p>Agência: ---- | Conta: -----</p> 
+            </header>
 
- <section class="balance-card">
-<div class="balance-info">
-<span>Saldo Disponível</span>
- <h2 id="current-balance">R$ 0,00</h2> 
+            <section class="balance-card">
+                <div class="balance-info">
+                    <span>Saldo Disponível</span>
+                    <h2 id="current-balance">R$ 0,00</h2> 
                 </div>
-<button id="toggle-balance" class="balance-toggle-button">
-<i class="fas fa-eye"></i>
-</button>
-</section>
+                <button id="toggle-balance" class="balance-toggle-button">
+                    <i class="fas fa-eye"></i>
+                </button>
+            </section>
 
-<section class="quick-actions">
-<a href="transferir.html" class="action-item"> <i class="fas fa-qrcode"></i>
-<span>Pix</span>
-</a>
-<a href="#" class="action-item">
-<i class="fas fa-barcode"></i>
-<span>Pagar</span>
-</a>
-<a href="#" class="action-item">
-<i class="fas fa-hand-holding-usd"></i>
- <span>Empréstimo</span>
-</a>
-<a href="#" class="action-item">
-<i class="fas fa-money-check-alt"></i>
-<span>Depositar</span>
-</a>
-</section>
- 
-<section class="latest-transactions">
-<h2>Últimas Atividades</h2>
+            <section class="quick-actions">
+                <a href="transferir.html" class="action-item"> <i class="fas fa-qrcode"></i>
+                    <span>Pix</span>
+                </a>
+                <a href="#" class="action-item">
+                    <i class="fas fa-barcode"></i>
+                    <span>Pagar</span>
+                </a>
+                <a href="#" class="action-item">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <span>Empréstimo</span>
+                </a>
+                <a href="#" class="action-item">
+                    <i class="fas fa-money-check-alt"></i>
+                    <span>Depositar</span>
+                </a>
+            </section>
+            
+            <section class="latest-transactions">
+                <h2>Últimas Atividades</h2>
+                <ul class="transaction-list" id="last-transactions-list">
+                </ul>
+            </section>
+        </main>
+    </div>
 
-<ul class="transaction-list" id="last-transactions-list">
-</ul>
-</section>
-</main>
-</div>
-
-<script src="bank-system.js"></script> 
+    <script src="bank-system.js"></script> 
 </body>
 </html>
