@@ -1,5 +1,4 @@
 {
-
-    "editor.renderIndentGuides": false, 
-    "workbench.tree.renderIndentGuides": "none" 
+    "workbench.tree.renderIndentGuides": "none",
+    "editor.guides.indentation": false
 }
