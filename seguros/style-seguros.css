@@ -1,0 +1,314 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Corpo */
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: #ffffff; 
+  color: #333;
+  min-height: 100vh;
+}
+
+/* Cabeçalho */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #FFD700; 
+  padding: 10px 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.logo { font-weight: bold; font-size: 1.3rem; }
+header nav a { text-decoration: none; color: #333; font-weight: bold; margin-left: 15px; }
+header nav a:hover { text-decoration: underline; }
+
+/* Botão Principal */
+.btn-principal {
+  padding: 15px 30px;
+  background: #333;
+  color: #FFD700;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: background 0.2s, transform 0.2s;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 20px;
+}
+.btn-principal:hover { background: #555; transform: translateY(-2px); color: #FFD700; }
+
+/* Botão Secundário */
+.btn-secundario {
+  padding: 12px 25px;
+  background: transparent;
+  color: #333;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 2px solid #333;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 20px;
+}
+.btn-secundario:hover { background: #333; color: #FFD700; }
+
+/* --- ESTILOS DA PÁGINA --- */
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 20px; }
+.container-full { max-width: 100%; margin: 0 auto; }
+
+.hero-seguros {
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero-seguros .container { position: relative; z-index: 2; }
+.hero-seguros::before {
+  content: '';
+  position: absolute;
+  top: -150px;
+  left: -100px;
+  width: 600px;
+  height: 400px;
+  background: #FFD700; 
+  border-radius: 45% 55% 60% 40% / 40% 40% 60% 60%;
+  transform: rotate(-15deg);
+  z-index: 1;
+}
+.hero-seguros h1 { font-size: 3rem; margin-bottom: 15px; max-width: 500px; }
+.hero-seguros p { font-size: 1.3rem; max-width: 450px; color: #444; }
+
+.secao-alternada { padding: 60px 0; }
+.secao-alternada .container {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+.col-texto, .col-imagem { flex: 1; }
+.col-imagem img {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.col-texto h2 { font-size: 2.5rem; margin-bottom: 15px; }
+.col-texto p { font-size: 1.2rem; margin-bottom: 20px; color: #555; }
+.col-texto ul { list-style: none; margin-left: 5px; }
+.col-texto ul li { font-size: 1.1rem; margin-bottom: 10px; color: #333; }
+.secao-alternada[data-layout="reverso"] .container {
+  flex-direction: row-reverse;
+}
+
+.secao-media-carousel {
+  padding: 60px 0;
+  background: #f9f9f9;
+}
+.secao-media-carousel h2 { text-align: center; font-size: 2.5rem; margin-bottom: 10px; }
+.secao-media-carousel p { text-align: center; font-size: 1.2rem; margin-bottom: 40px; color: #555; }
+
+/* Wrapper para os botões */
+.carousel-wrapper {
+  position: relative;
+  max-width: 1200px; /* Limita a largura do carrossel */
+  margin: 0 auto;
+  padding: 0 40px; /* Espaço para os botões não ficarem em cima do conteúdo */
+}
+
+.carousel-container {
+  overflow-x: auto;
+  padding-bottom: 20px;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+  scroll-behavior: smooth; /* Animação de rolagem */
+}
+/* Chrome, Safari, Edge */
+.carousel-container::-webkit-scrollbar {
+  display: none; 
+}
+
+.carousel-track {
+  display: flex;
+  gap: 15px;
+  width: max-content;
+}
+
+.media-item {
+  /* Tamanho reduzido */
+  flex: 0 0 220px; /* Reduzido para 220px */
+  aspect-ratio: 1 / 1;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s;
+  cursor: pointer;
+  position: relative; 
+}
+.media-item img,
+.media-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+}
+
+.media-item iframe {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+  width: 177.78%;
+  border: 0;
+}
+
+/* Estilo dos botões */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: #333;
+  color: #FFD700;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: background 0.2s;
+  line-height: 45px;
+  padding: 0;
+}
+.carousel-btn:hover { background: #555; }
+.carousel-btn.prev {
+  left: -5px;
+}
+.carousel-btn.next {
+  right: -5px;
+}
+
+/* Seção CTA */
+.secao-cta {
+  padding: 80px 20px;
+  text-align: center;
+  background: #fff;
+}
+.secao-cta h2 { font-size: 2.5rem; margin-bottom: 15px; }
+.secao-cta p { font-size: 1.2rem; max-width: 600px; margin: 0 auto 20px auto; color: #444; }
+
+/* Rodapé Escuro */
+footer {
+  background: #333;
+  color: #f0f0f0;
+  padding: 40px 0;
+}
+footer .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+footer .logo { color: #FFD700; }
+.footer-links a { color: #f0f0f0; text-decoration: none; margin-left: 15px; }
+.footer-links a:hover { text-decoration: underline; }
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+  .secao-alternada .container,
+  .secao-alternada[data-layout="reverso"] .container {
+    flex-direction: column;
+  }
+  .hero-seguros { padding: 60px 0; }
+  .hero-seguros::before { width: 300px; height: 200px; top: -50px; left: -50px; }
+  .hero-seguros h1 { font-size: 2.5rem; }
+  
+  .media-item {
+    flex: 0 0 200px; /* Reduzido também no mobile */
+  }
+  
+  .carousel-wrapper {
+    padding: 0; /* Remove padding no mobile */
+  }
+  .carousel-btn {
+    /* Esconde os botões em telas pequenas */
+    display: none; 
+  }
+  .carousel-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+.video-placeholder, 
+.audio-placeholder {
+  width: 100%;
+  height: 100%;
+  background: #eee;
+  color: #555;
+  
+  /* Centralização com Flexbox */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
+  position: relative; /* ESSENCIAL para o ícone de play */
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent; /* Remove brilho de clique no mobile */
+  text-align: center;
+  padding: 10px; /* Impede o texto de colar nas bordas */
+}
+
+/* Estilo para placeholder de VÍDEO */
+.video-placeholder {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Estilos para o conteúdo do card de ÁUDIO */
+.audio-icon {
+  font-size: 3.5rem; /* Ícone de fone grande */
+  line-height: 1;
+}
+
+.audio-title {
+  font-size: 1.2rem; /* Texto "Caso #" */
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Estilo para o ícone de play/pause */
+.audio-placeholder .play-icon {
+  position: absolute;
+  bottom: 15px; /* Fica na base do card */
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+  color: #333;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+
+/* Estilo de "Tocando" */
+.audio-placeholder.playing {
+  background: #ddd; /* Fica um pouco mais escuro */
+}
+
+.audio-placeholder.playing .play-icon {
+  opacity: 1;
+}

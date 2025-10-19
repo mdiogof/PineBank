@@ -1,11 +1,11 @@
-/* 🧼 Reset */
+/* Reset */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* 🌿 Corpo (Reutilizado) */
+/* Corpo (Reutilizado) */
 body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background: linear-gradient(135deg, #fff8d1, #FFD700);
@@ -13,7 +13,7 @@ body {
   min-height: 100vh;
 }
 
-/* 🟨 Cabeçalho (Reutilizado) */
+/* Cabeçalho (Reutilizado) */
 header {
   display: flex;
   justify-content: space-between;
@@ -30,7 +30,7 @@ header {
 header nav a { text-decoration: none; color: #333; font-weight: bold; margin-left: 15px; }
 header nav a:hover { text-decoration: underline; }
 
-/* 🟡 Botão Principal (Reutilizado) */
+/* Botão Principal (Reutilizado) */
 .btn-principal {
   padding: 15px 30px;
   background: #333;
@@ -49,12 +49,9 @@ header nav a:hover { text-decoration: underline; }
 }
 .btn-principal:hover { background: #555; transform: translateY(-2px); color: #FFD700; }
 
-/* --- NOVOS ESTILOS DA PÁGINA --- */
-
 /* 1. Imagem no Topo */
 .hero-section {
   height: 400px;
-  /* ⬇️⬇️ MUDE AQUI A SUA IMAGEM DE TOPO ⬇️⬇️ */
   background-image: url('emprestimo.png');
   background-size: cover;
   background-position: center;
@@ -62,7 +59,7 @@ header nav a:hover { text-decoration: underline; }
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-end; /* Alinha texto embaixo */
+  justify-content: flex-end;
   padding: 40px;
   color: #fff;
 }
