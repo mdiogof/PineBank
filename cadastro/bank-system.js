@@ -11,6 +11,7 @@ const initialBankData = {
             agency: "0001",
             account: "123456",
             balance: 4150.22, 
+            loanLimit: 15000.00, // Limite de Brendo
             transactions: [
                 { id: 1, type: "debit", amount: 150.00, description: "Compra Online Magazine", date: "18/10/2025 10:00" },
                 { id: 2, type: "credit", amount: 2500.00, description: "Salário Setembro", date: "15/10/2025 12:00" },
@@ -23,6 +24,7 @@ const initialBankData = {
             agency: "0001",
             account: "654321",
             balance: 1200.00,
+            loanLimit: 7500.00, // Limite da Maria
             transactions: []
         },
         "0001-987654": {
@@ -30,6 +32,7 @@ const initialBankData = {
             agency: "0001",
             account: "987654",
             balance: 350.50,
+            loanLimit: 3000.00, // Limite do Diogo
             transactions: []
         }
     },
@@ -59,9 +62,8 @@ function getCurrentAccount() {
     const loggedUser = JSON.parse(localStorage.getItem('usuarioLogado'));
 
     if (loggedUser) {
-        // CORREÇÃO DA AGÊNCIA: Garante que a agência e conta sejam strings, usando 0001 como fallback
         const agencia = loggedUser.agencia ? loggedUser.agencia.toString().padStart(4, '0') : "0001";
-        const conta = loggedUser.conta ? loggedUser.conta.toString().padStart(6, '0') : loggedUser.account.toString().padStart(6, '0');
+        const conta = (loggedUser.conta || loggedUser.account).toString().padStart(6, '0');
 
         const accountKey = `${agencia}-${conta}`;
         
@@ -71,6 +73,7 @@ function getCurrentAccount() {
                  agency: agencia,
                  account: conta,
                  balance: 0.00, 
+                 loanLimit: 2000.00, // Limite padrão para novos cadastros
                  transactions: []
              };
              saveBankData(bankData);
@@ -157,7 +160,170 @@ function transferHandler(e) {
 window.transferHandler = transferHandler; 
 
 // ----------------------------------------------------------------------
-// 4. FUNÇÕES DE RENDERIZAÇÃO E EXTRATO COMPLETO (Corrigidas)
+// 4. LÓGICA DE EMPRÉSTIMO (Cálculo e Contratação) - CORREÇÃO DE LIMITE
+// ----------------------------------------------------------------------
+
+const LOAN_CONFIG = {
+    INTEREST_RATE: 0.015, // 1.5% ao mês
+    IOF_DAILY_RATE: 0.000082, 
+    IOF_FIXED_RATE: 0.0038,   
+};
+
+const calculatePMT = (rateMonthly, periods, presentValue) => {
+    const rate = rateMonthly; 
+    const numerator = rate * Math.pow(1 + rate, periods);
+    const denominator = Math.pow(1 + rate, periods) - 1;
+    if (denominator === 0) return presentValue / periods; 
+    return (presentValue * numerator) / denominator;
+};
+
+function simulateLoan() {
+    const valorEl = document.getElementById('valor');
+    const parcelasEl = document.getElementById('parcelas');
+    const resultsArea = document.getElementById('loan-results');
+    
+    const V = parseFloat(valorEl.value);
+    const N = parseInt(parcelasEl.value);
+
+    // --- 1. CHECAGEM CRÍTICA DE LIMITE ---
+    const currentAccount = getCurrentAccount();
+    if (!currentAccount) return; 
+    
+    const limit = currentAccount.loanLimit; 
+    const limitDisplayEl = document.getElementById('loan-limit-display');
+    
+    if (limitDisplayEl) {
+        limitDisplayEl.innerHTML = `Seu limite de crédito pré-aprovado é de <strong>${formatCurrency(limit)}</strong>.`;
+    }
+    
+    // 2. VALIDAÇÃO PRINCIPAL: Valor ultrapassa o limite?
+    if (V > limit) {
+        alert(`O valor solicitado (${formatCurrency(V)}) excede seu limite pré-aprovado de ${formatCurrency(limit)}.`);
+        if (V > limit) valorEl.value = limit; 
+        resultsArea.classList.add('hidden');
+        return;
+    }
+
+    // Validação básica do formulário
+    if (isNaN(V) || V < 1000 || isNaN(N) || N < 1 || V > 20000) {
+        resultsArea.classList.add('hidden');
+        return;
+    }
+
+    // --- 3. CÁLCULO FINANCEIRO ---
+    const iofFixo = V * LOAN_CONFIG.IOF_FIXED_RATE;
+    const iofDiario = V * LOAN_CONFIG.IOF_DAILY_RATE * (N * 30);
+    const iofTotal = iofFixo + iofDiario;
+    const taxaJurosMensal = LOAN_CONFIG.INTEREST_RATE;
+    const parcela = calculatePMT(taxaJurosMensal, N, V); 
+    const valorTotalPagar = parcela * N;
+    const custoTotalEfetivo = valorTotalPagar - V + iofTotal;
+    const cetAnual = Math.pow(1 + (custoTotalEfetivo / V), 12 / N) - 1; 
+    const cetMensalPercentual = (cetAnual / 12) * 100;
+    
+    // --- 4. PREENCHIMENTO DOS RESULTADOS ---
+    document.getElementById('res-valor-solicitado').textContent = formatCurrency(V);
+    document.getElementById('res-juros').textContent = (taxaJurosMensal * 100).toFixed(2) + '% a.m.';
+    document.getElementById('res-iof').textContent = formatCurrency(iofTotal);
+    document.getElementById('res-cet').textContent = cetMensalPercentual.toFixed(2) + '% a.m.';
+    document.getElementById('res-parcela').textContent = formatCurrency(parcela);
+    document.getElementById('res-total-pagar').textContent = formatCurrency(valorTotalPagar);
+
+    // --- 5. CONFIGURAÇÃO DO BOTÃO CONTRATAR ---
+    const contractButton = document.getElementById('contract-button');
+    
+    contractButton.textContent = `Contratar R$ ${V.toFixed(2).replace('.', ',')} em ${N}x`;
+    contractButton.setAttribute('data-loan-value', V);
+    contractButton.setAttribute('data-parcel-value', parcela.toFixed(2));
+    contractButton.setAttribute('data-parcels', N);
+
+    // Anexa o listener de clique de forma simples e robusta
+    contractButton.removeEventListener('click', contractLoan); 
+    contractButton.addEventListener('click', contractLoan); 
+
+    resultsArea.classList.remove('hidden');
+}
+
+function contractLoan(e) {
+    e.preventDefault(); 
+    
+    const contractButton = document.getElementById('contract-button'); 
+    
+    const valorContratado = parseFloat(contractButton.getAttribute('data-loan-value'));
+    const valorParcela = parseFloat(contractButton.getAttribute('data-parcel-value'));
+    const numParcelas = parseInt(contractButton.getAttribute('data-parcels'));
+
+    if (isNaN(valorContratado) || !numParcelas) {
+        alert("Erro de contratação: Simulação inválida. Por favor, simule novamente.");
+        return;
+    }
+
+    let bankData = loadBankData();
+    let allAccounts = bankData.accounts;
+    const loggedUserInfo = JSON.parse(localStorage.getItem('usuarioLogado')); 
+    
+    if (!loggedUserInfo) {
+        alert("Sessão expirada. Faça login novamente.");
+        window.location.href = 'login.html';
+        return;
+    }
+    
+    const currentAccountKey = loggedUserInfo.agencia + '-' + loggedUserInfo.conta;
+    let currentUser = allAccounts[currentAccountKey]; 
+
+    // Validação de limite (redundante, mas importante)
+    if (valorContratado > currentUser.loanLimit) {
+        alert(`Não é possível contratar: Valor excede seu limite de ${formatCurrency(currentUser.loanLimit)}.`);
+        return;
+    }
+    
+    // 1. Crédito do valor do empréstimo na conta
+    currentUser.balance += valorContratado;
+    currentUser.balance = parseFloat(currentUser.balance.toFixed(2)); 
+    
+    // 2. CORREÇÃO CRÍTICA: Abate o limite disponível
+    currentUser.loanLimit = parseFloat((currentUser.loanLimit - valorContratado).toFixed(2));
+    if (currentUser.loanLimit < 0) currentUser.loanLimit = 0; 
+    
+    // 3. Adiciona a entrada do crédito no extrato
+    currentUser.transactions.push({
+        id: Date.now(),
+        type: 'credit',
+        description: `Empréstimo Contratado`,
+        amount: valorContratado,
+        date: new Date().toLocaleDateString('pt-BR')
+    });
+    
+    // 4. CRIA AS PARCELAS FUTURAS (Débito Automático)
+    for (let i = 1; i <= numParcelas; i++) {
+        const nextMonth = new Date();
+        nextMonth.setMonth(nextMonth.getMonth() + i); 
+        nextMonth.setDate(5); 
+
+        currentUser.transactions.push({
+            id: Date.now() + i, 
+            type: 'debit',
+            description: `Débito Parcela ${i}/${numParcelas} - Emp. Pessoal`,
+            amount: valorParcela,
+            date: nextMonth.toLocaleDateString('pt-BR'),
+            isFuture: true 
+        });
+    }
+
+    // 5. Salva no Local Storage
+    allAccounts[currentAccountKey] = currentUser;
+    saveBankData({ accounts: allAccounts, currentUserKey: currentAccountKey });
+
+    // UX: Adiciona um pequeno delay antes de redirecionar para mostrar o alerta de sucesso
+    setTimeout(() => {
+        alert(`Empréstimo de ${formatCurrency(valorContratado)} contratado! ${numParcelas} parcelas de ${formatCurrency(valorParcela)} agendadas.`);
+        window.location.href = 'conta.html';
+    }, 100);
+}
+
+
+// ----------------------------------------------------------------------
+// 5. FUNÇÕES DE RENDERIZAÇÃO
 // ----------------------------------------------------------------------
 
 function formatCurrency(amount) {
@@ -195,7 +361,7 @@ function displayLastTransactions(account) {
     listEl.innerHTML = ''; 
 
     const transactions = account.transactions.sort((a, b) => {
-        const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(a.date);
+        const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
         const dateB = typeof b.date === 'string' ? new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
         return dateB - dateA;
     }).slice(0, 3); 
@@ -280,7 +446,6 @@ function renderFullExtrato(account, filters = {}) {
     
     const filteredTransactions = transactions.filter(t => {
         const typeMatch = filters.type === 'all' || !filters.type || t.type === filters.type;
-        // Lógica para o filtro de mês/período seria adicionada aqui, se necessário.
         return typeMatch;
     });
 
@@ -325,7 +490,7 @@ function renderFullExtrato(account, filters = {}) {
 
 
 // ----------------------------------------------------------------------
-// 7. INICIALIZAÇÃO DE PÁGINA
+// 6. INICIALIZAÇÃO DE PÁGINA
 // ----------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -334,8 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const isContaPage = document.body.classList.contains('page-conta');
     const isTransferPage = document.body.classList.contains('page-transferencia');
     const isExtratoPage = document.body.classList.contains('page-extrato'); 
+    const isEmprestimoPage = document.body.classList.contains('page-emprestimo');
 
-    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage)) {
+    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage)) {
         window.location.href = 'login.html';
         return;
     }
@@ -372,12 +538,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Lógica para extrato.html
         if (isExtratoPage) {
-            const accountInfoEl = document.querySelector('#account-info');
+            const accountInfoEl = document.querySelector('.main-header p');
             const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
             
-            // Corrige o header na página Extrato
             if (accountInfoEl) {
-                 accountInfoEl.textContent = `Agência: ${currentAccount.agencia} | Conta: ${formattedAccount}`;
+                accountInfoEl.textContent = `Agência: ${currentAccount.agencia} | Conta: ${formattedAccount}`;
             }
 
             const applyButton = document.getElementById('apply-filters');
@@ -387,8 +552,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     renderFullExtrato(currentAccount, { type: typeFilter });
                 });
             }
-            // Inicializa o extrato completo
             renderFullExtrato(currentAccount, { type: 'all' });
+        }
+        
+        // Lógica para emprestimos.html (Simulação)
+        if (isEmprestimoPage) {
+            const valorInput = document.getElementById('valor');
+            const parcelasSelect = document.getElementById('parcelas');
+            const loanSimulator = document.getElementById('loan-simulator');
+
+            // Limpa o formulário e esconde os resultados ao entrar na página (UX)
+            if (loanSimulator) {
+                 loanSimulator.reset();
+                 const resultsArea = document.getElementById('loan-results');
+                 if (resultsArea) resultsArea.classList.add('hidden');
+            }
+            
+            if (valorInput && parcelasSelect) {
+                 if (!valorInput.value || !parcelasSelect.value) {
+                     valorInput.value = 5000;
+                     parcelasSelect.value = 12;
+                 }
+                 // Anexa listeners para mudança de input (CORREÇÃO DE AUTO-SIMULAÇÃO)
+                 // A simulação deve ser ativada APENAS pelo submit.
+                 
+                 // Adiciona o listener para o submit do formulário de simulação
+                 if (loanSimulator) {
+                     loanSimulator.addEventListener('submit', function(e) {
+                         e.preventDefault();
+                         simulateLoan();
+                     });
+                 }
+                 
+                 // Simula na abertura da página (com os valores padrão)
+                 simulateLoan(); 
+            }
         }
     }
 });

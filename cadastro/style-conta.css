@@ -48,7 +48,7 @@ body {
     padding-top: 20px;
 }
 
-/* CORREÇÃO CRÍTICA: AUMENTA O LOGO NA BARRA LATERAL */
+/* AUMENTA O LOGO NA BARRA LATERAL */
 .logo-small {
     width: 150px;  /* Tamanho Maior */
     height: 150px; 
