@@ -210,3 +210,68 @@ footer p {
   margin-top: 10px;
   font-size: 0.9rem;
 }
+
+.contato-wrapper {
+  position: relative; 
+  display: inline-block; 
+}
+
+.contato-btn {
+  color: #333; /* (Assumindo a cor do link do rodapé) */
+  text-decoration: none;
+  cursor: pointer;
+}
+.contato-wrapper:hover .contato-btn {
+  text-decoration: underline; /* Imita o hover de um link */
+}
+
+/* A "Caixinha" que aparece  */
+.contato-box {
+  /* Escondido por padrão */
+  opacity: 0;
+  visibility: hidden;
+  
+  /* Posicionamento (flutuante) */
+  position: absolute;
+  z-index: 1000;
+  bottom: 100%; 
+  right: 0;    
+  transform: translateY(0);
+  
+  /* Estilos da Caixinha */
+  background: #ffffff;
+  border: 1px solid #ddd;
+  box-shadow: 0 -5px 15px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  padding: 15px 20px;
+  width: 250px; /* Largura da caixinha */
+  
+  transition: opacity 0.2s ease;
+}
+
+.contato-wrapper:hover .contato-box {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Estilos do conteúdo da caixinha */
+.contato-box h4 {
+  margin: 0 0 10px 0;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 1.1rem;
+}
+.contato-box p {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.contato-box p strong {
+  color: #000;
+}
+.contato-box span {
+  font-size: 0.8rem;
+  color: #777;
+}
