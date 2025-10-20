@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar 2ª Via | Pineapple</title>
+    <link rel="stylesheet" href="style-solicitacao.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="bank-system.js"></script> 
+</head>
+<body class="page-solicitacao">
+    
+    <div class="solicitacao-container">
+        
+        <a href="cartoes.html" class="btn-voltar">
+            <i class="fas fa-arrow-left"></i> Voltar para Cartões
+        </a>
+
+        <div class="solicitacao-card">
+            
+            <div class="header-solicitacao">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo">
+                <h2>Solicitar 2ª Via do Cartão</h2>
+                <p>Selecione o motivo para prosseguir. Em caso de perda/roubo, bloquearemos o cartão imediatamente.</p>
+            </div>
+
+            <form id="solicitacao-form">
+                
+                <div class="input-group radio-group">
+                    <label>Qual o motivo da sua solicitação?</label>
+                    
+                    <div class="radio-option">
+                        <input type="radio" id="motivo-roubo" name="motivo" value="roubo" required>
+                        <label for="motivo-roubo"><i class="fas fa-exclamation-triangle"></i> Perda ou Roubo (Bloqueio Imediato)</label>
+                    </div>
+
+                    <div class="radio-option">
+                        <input type="radio" id="motivo-dano" name="motivo" value="dano" required>
+                        <label for="motivo-dano"><i class="fas fa-credit-card"></i> Cartão danificado ou desgastado</label>
+                    </div>
+
+                    <div class="radio-option">
+                        <input type="radio" id="motivo-novo" name="motivo" value="novo" required>
+                        <label for="motivo-novo"><i class="fas fa-plus"></i> Apenas novo design ou upgrade</label>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="endereco">Confirme o Endereço de Entrega</label>
+                    <input type="text" id="endereco" required placeholder="Rua Abacaxi, 1010">
+                </div>
+                
+                <button type="submit" class="solicitar-button">Confirmar e Solicitar Novo Cartão</button>
+            </form>
+
+            <div id="confirmacao-entrega" class="confirmation-area hidden">
+                <h3><i class="fas fa-shipping-fast"></i> Solicitação Recebida!</h3>
+                <p>Seu novo cartão foi solicitado e será entregue no endereço:<br><strong><span id="endereco-confirmado"></span></strong></p>
+                <p class="delivery-info">Previsão de entrega: 5 a 10 dias úteis. Seu cartão antigo (final 1234) foi bloqueado.</p>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

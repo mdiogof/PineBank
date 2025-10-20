@@ -11,7 +11,13 @@ const initialBankData = {
             agency: "0001",
             account: "123456",
             balance: 4150.22, 
-            loanLimit: 15000.00, // Limite de Brendo
+            loanLimit: 15000.00,
+            cardData: { 
+                physicalNum: '4567 • 8901 • 2345 • 1234', 
+                virtualNum: '4567 • 8901 • 2345 • 5678', // Número completo salvo inicial
+                virtualCvv: '987',
+                validity: '01/29'
+            },
             transactions: [
                 { id: 1, type: "debit", amount: 150.00, description: "Compra Online Magazine", date: "18/10/2025 10:00" },
                 { id: 2, type: "credit", amount: 2500.00, description: "Salário Setembro", date: "15/10/2025 12:00" },
@@ -24,7 +30,13 @@ const initialBankData = {
             agency: "0001",
             account: "654321",
             balance: 1200.00,
-            loanLimit: 7500.00, // Limite da Maria
+            loanLimit: 7500.00,
+            cardData: {
+                physicalNum: '1111 • 2222 • 3333 • 4444', 
+                virtualNum: '4567 • 8901 • 2345 • 9090', 
+                virtualCvv: '555',
+                validity: '05/28'
+            },
             transactions: []
         },
         "0001-987654": {
@@ -32,7 +44,13 @@ const initialBankData = {
             agency: "0001",
             account: "987654",
             balance: 350.50,
-            loanLimit: 3000.00, // Limite do Diogo
+            loanLimit: 3000.00,
+            cardData: {
+                physicalNum: '9999 • 8888 • 7777 • 6666', 
+                virtualNum: '4567 • 8901 • 2345 • 1010', 
+                virtualCvv: '333',
+                validity: '03/27'
+            },
             transactions: []
         }
     },
@@ -73,8 +91,8 @@ function getCurrentAccount() {
                  agency: agencia,
                  account: conta,
                  balance: 0.00, 
-                 loanLimit: 2000.00, // Limite padrão para novos cadastros
-                 transactions: []
+                 loanLimit: 5000.00, 
+                 cardData: initialBankData.accounts["0001-123456"].cardData // Usa o cardData padrão
              };
              saveBankData(bankData);
         }
@@ -93,7 +111,193 @@ window.getCurrentAccount = getCurrentAccount;
 
 
 // ----------------------------------------------------------------------
-// 3. FUNÇÃO DE TRANSFERÊNCIA (LÓGICA PIX)
+// 3. LÓGICA DE CARTÕES (Bloqueio, Geração e Exibição)
+// ----------------------------------------------------------------------
+
+function toggleCardLock(isPhysical) {
+    const statusId = isPhysical ? 'card-status-fisico' : 'card-status-virtual';
+    const buttonId = isPhysical ? 'toggle-fisico' : 'regenerate-virtual';
+    const cardEl = isPhysical ? document.querySelector('.credit-card.physical') : document.querySelector('.credit-card.virtual');
+    
+    const statusEl = document.getElementById(statusId);
+    const buttonEl = document.getElementById(buttonId);
+    
+    if (!statusEl || !buttonEl || !cardEl) return; 
+
+    const isActive = statusEl.classList.contains('status-active');
+
+    if (isActive) {
+        // Bloquear
+        statusEl.textContent = 'BLOQUEADO';
+        statusEl.classList.remove('status-active');
+        statusEl.classList.add('status-locked');
+        buttonEl.innerHTML = '<i class="fas fa-unlock"></i> Desbloquear Temporariamente';
+        buttonEl.classList.remove('toggle-lock');
+        buttonEl.classList.add('action-danger');
+        if (cardEl) cardEl.classList.add('locked-card');
+        alert("Cartão bloqueado com sucesso. Transações serão negadas.");
+        
+    } else {
+        // Desbloquear
+        statusEl.textContent = 'ATIVO';
+        statusEl.classList.remove('status-locked');
+        statusEl.classList.add('status-active');
+        buttonEl.innerHTML = '<i class="fas fa-lock-open"></i> Bloquear Temporariamente';
+        buttonEl.classList.remove('action-danger');
+        buttonEl.classList.add('toggle-lock');
+        if (cardEl) cardEl.classList.remove('locked-card');
+        alert("Cartão desbloqueado. Já pode ser usado.");
+    }
+}
+
+function generateRandomCvv() {
+    return Math.floor(100 + Math.random() * 900);
+}
+function generateRandomCardSegment() {
+    return Math.floor(1000 + Math.random() * 9000).toString().padStart(4, '0');
+}
+
+function generateNewVirtualCard() {
+    const numVirtualEl = document.getElementById('num-virtual');
+    const cvvEl = document.getElementById('cvv-virtual');
+    const validadeEl = document.getElementById('validade-virtual');
+    
+    if (!numVirtualEl || !cvvEl || !validadeEl) return;
+
+    let bankData = loadBankData();
+    let currentUser = getCurrentAccount();
+    const currentAccountKey = currentUser.agencia + '-' + currentUser.account;
+
+    const newLastFour = generateRandomCardSegment();
+    const fullNewNumber = `${generateRandomCardSegment()} • ${generateRandomCardSegment()} • ${generateRandomCardSegment()} • ${newLastFour}`; 
+    const newCvv = generateRandomCvv();
+
+    const nextMonth = new Date();
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    const newYear = (nextMonth.getFullYear() + 4).toString().slice(-2);
+    const newValidity = `${(nextMonth.getMonth() + 1).toString().padStart(2, '0')}/${newYear}`;
+
+    // 1. Atualiza o Local Storage
+    currentUser.cardData.virtualNum = fullNewNumber; 
+    currentUser.cardData.virtualCvv = newCvv.toString();
+    currentUser.cardData.validity = newValidity;
+    bankData.accounts[currentAccountKey] = currentUser;
+    saveBankData(bankData);
+
+    // 2. Atualiza a UI para o estado OCULTO com os novos dados
+    numVirtualEl.textContent = `•••• •••• •••• ${newLastFour}`; 
+    cvvEl.textContent = '***'; // Mantém o CVV oculto
+    validadeEl.textContent = newValidity;
+    
+    alert(`Novo Cartão Virtual gerado! Validade: ${newValidity}. O antigo foi invalidado.`);
+}
+
+function toggleCardData(isPhysical) {
+    let numEl = isPhysical ? document.getElementById('num-fisico') : document.getElementById('num-virtual');
+    let cvvEl = isPhysical ? null : document.getElementById('cvv-virtual');
+    let button = isPhysical ? document.getElementById('toggle-fisico-data') : document.getElementById('exibir-dados');
+    
+    let currentUser = getCurrentAccount(); 
+    if (!currentUser || !numEl || !button || !currentUser.cardData) return;
+    
+    const isHidden = numEl.textContent.startsWith('•');
+    
+    // Puxa os dados salvos
+    const fullNum = isPhysical ? currentUser.cardData.physicalNum : currentUser.cardData.virtualNum;
+    const currentCvv = currentUser.cardData.virtualCvv;
+    const lastFour = fullNum.slice(-4);
+    
+    if (isHidden) {
+        // EXIBIR DADOS
+        numEl.textContent = fullNum;
+        if (cvvEl) cvvEl.textContent = currentCvv;
+        button.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Dados';
+    } else {
+        // OCULTAR DADOS
+        numEl.textContent = `•••• •••• •••• ${lastFour}`;
+        if (cvvEl) cvvEl.textContent = '***'; // Placeholder seguro
+        button.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
+    }
+}
+
+function handleConfiguration() {
+    alert("Redirecionando para a página de Configurações de Cartão (Simulação).");
+}
+
+
+// ----------------------------------------------------------------------
+// 4. LÓGICA DE SOLICITAÇÃO DE CARTÃO (2ª VIA) - NOVO MÓDULO FINAL
+// ----------------------------------------------------------------------
+
+function handleCardRequest(e) {
+    e.preventDefault(); // CRÍTICO: Impede o recarregamento e resolve o problema de apagar dados
+    
+    const form = document.getElementById('solicitacao-form');
+    const motivo = document.querySelector('input[name="motivo"]:checked');
+    const endereco = document.getElementById('endereco').value.trim();
+
+    if (!motivo) {
+        alert("Por favor, selecione um motivo.");
+        return;
+    }
+    
+    if (!endereco) {
+        alert("Confirme o endereço de entrega.");
+        return;
+    }
+    
+    // 1. Lógica de Bloqueio (Simulação)
+    if (motivo.value === 'roubo') {
+        alert("Cartão antigo BLOQUEADO IMEDIATAMENTE por segurança. Um novo será enviado.");
+        // Em um sistema real, chamaria toggleCardLock(true) aqui e bloquearia o cartão
+    }
+    
+    // 2. Lógica de Agendamento e Cobrança
+    let bankData = loadBankData();
+    let currentUser = getCurrentAccount();
+    const currentAccountKey = currentUser.agencia + '-' + currentUser.account;
+    
+    const taxaSegundaVia = (motivo.value === 'dano' || motivo.value === 'novo') ? 15.00 : 0.00;
+    
+    if (taxaSegundaVia > 0) {
+        currentUser.balance = parseFloat((currentUser.balance - taxaSegundaVia).toFixed(2));
+        currentUser.transactions.push({
+            id: Date.now(),
+            type: 'debit',
+            description: `Taxa 2ª Via Cartão`,
+            amount: taxaSegundaVia,
+            date: new Date().toLocaleDateString('pt-BR')
+        });
+    }
+
+    // Adiciona o agendamento de envio ao extrato (para UX)
+    currentUser.transactions.push({
+        id: Date.now() + 1,
+        type: 'debit', 
+        description: `Envio 2ª Via Cartão - Chegada em 10 dias`,
+        amount: 0.00,
+        date: new Date().toLocaleDateString('pt-BR'),
+        isFuture: true
+    });
+    
+    // 3. Salva os dados atualizados
+    bankData.accounts[currentAccountKey] = currentUser;
+    saveBankData(bankData);
+    
+    // 4. Atualiza a UI para o modo de confirmação
+    const solicitacaoForm = document.getElementById('solicitacao-form');
+    if (solicitacaoForm) solicitacaoForm.classList.add('hidden');
+    
+    document.getElementById('endereco-confirmado').textContent = endereco;
+    const confirmacaoArea = document.getElementById('confirmacao-entrega');
+    if (confirmacaoArea) confirmacaoArea.classList.remove('hidden');
+
+    alert(`Solicitação enviada! Novo cartão a caminho de ${endereco}.`);
+}
+
+
+// ----------------------------------------------------------------------
+// 5. FUNÇÃO DE TRANSFERÊNCIA (LÓGICA PIX)
 // ----------------------------------------------------------------------
 
 function transferHandler(e) {
@@ -121,7 +325,6 @@ function transferHandler(e) {
 
     const recipientAccount = allAccounts[recipientAccKey];
     
-    // Realiza o Débito e Crédito (Simulação)
     currentUser.balance = parseFloat((currentUser.balance - amount).toFixed(2));
     recipientAccount.balance = parseFloat((recipientAccount.balance + amount).toFixed(2));
 
@@ -132,7 +335,6 @@ function transferHandler(e) {
     const senderName = currentUser.owner.split(' ')[0];
     const recipientName = recipientAccount.owner.split(' ')[0];
 
-    // Adiciona ao extrato do REMETENTE (Débito)
     currentUser.transactions.push({
         id: transactionId,
         type: 'debit',
@@ -141,7 +343,6 @@ function transferHandler(e) {
         date: dateStr
     });
 
-    // Adiciona ao extrato do DESTINATÁRIO (Crédito)
     recipientAccount.transactions.push({
         id: transactionId + 1,
         type: 'credit',
@@ -160,7 +361,7 @@ function transferHandler(e) {
 window.transferHandler = transferHandler; 
 
 // ----------------------------------------------------------------------
-// 4. LÓGICA DE EMPRÉSTIMO (Cálculo e Contratação) - CORREÇÃO DE LIMITE
+// 6. LÓGICA DE EMPRÉSTIMO (Cálculo e Contratação)
 // ----------------------------------------------------------------------
 
 const LOAN_CONFIG = {
@@ -185,7 +386,6 @@ function simulateLoan() {
     const V = parseFloat(valorEl.value);
     const N = parseInt(parcelasEl.value);
 
-    // --- 1. CHECAGEM CRÍTICA DE LIMITE ---
     const currentAccount = getCurrentAccount();
     if (!currentAccount) return; 
     
@@ -237,7 +437,6 @@ function simulateLoan() {
     contractButton.setAttribute('data-parcel-value', parcela.toFixed(2));
     contractButton.setAttribute('data-parcels', N);
 
-    // Anexa o listener de clique de forma simples e robusta
     contractButton.removeEventListener('click', contractLoan); 
     contractButton.addEventListener('click', contractLoan); 
 
@@ -271,7 +470,7 @@ function contractLoan(e) {
     const currentAccountKey = loggedUserInfo.agencia + '-' + loggedUserInfo.conta;
     let currentUser = allAccounts[currentAccountKey]; 
 
-    // Validação de limite (redundante, mas importante)
+    // Validação de limite
     if (valorContratado > currentUser.loanLimit) {
         alert(`Não é possível contratar: Valor excede seu limite de ${formatCurrency(currentUser.loanLimit)}.`);
         return;
@@ -281,10 +480,10 @@ function contractLoan(e) {
     currentUser.balance += valorContratado;
     currentUser.balance = parseFloat(currentUser.balance.toFixed(2)); 
     
-    // 2. CORREÇÃO CRÍTICA: Abate o limite disponível
+    // 2. CORREÇÃO: Abate o limite disponível
     currentUser.loanLimit = parseFloat((currentUser.loanLimit - valorContratado).toFixed(2));
     if (currentUser.loanLimit < 0) currentUser.loanLimit = 0; 
-    
+
     // 3. Adiciona a entrada do crédito no extrato
     currentUser.transactions.push({
         id: Date.now(),
@@ -323,7 +522,7 @@ function contractLoan(e) {
 
 
 // ----------------------------------------------------------------------
-// 5. FUNÇÕES DE RENDERIZAÇÃO
+// 7. FUNÇÕES DE RENDERIZAÇÃO
 // ----------------------------------------------------------------------
 
 function formatCurrency(amount) {
@@ -490,7 +689,7 @@ function renderFullExtrato(account, filters = {}) {
 
 
 // ----------------------------------------------------------------------
-// 6. INICIALIZAÇÃO DE PÁGINA
+// 8. INICIALIZAÇÃO DE PÁGINA
 // ----------------------------------------------------------------------
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -500,8 +699,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const isTransferPage = document.body.classList.contains('page-transferencia');
     const isExtratoPage = document.body.classList.contains('page-extrato'); 
     const isEmprestimoPage = document.body.classList.contains('page-emprestimo');
+    const isCartoesPage = document.body.classList.contains('page-cartoes');
+    const isSolicitacaoPage = document.body.classList.contains('page-solicitacao');
 
-    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage)) {
+    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage)) {
         window.location.href = 'login.html';
         return;
     }
@@ -574,9 +775,10 @@ document.addEventListener('DOMContentLoaded', () => {
                      parcelasSelect.value = 12;
                  }
                  // Anexa listeners para mudança de input (CORREÇÃO DE AUTO-SIMULAÇÃO)
-                 // A simulação deve ser ativada APENAS pelo submit.
-                 
-                 // Adiciona o listener para o submit do formulário de simulação
+                 if (valorInput) valorInput.addEventListener('input', simulateLoan);
+                 if (parcelasSelect) parcelasSelect.addEventListener('change', simulateLoan);
+
+                 // Adiciona o listener de SUBMIT para o botão Simular
                  if (loanSimulator) {
                      loanSimulator.addEventListener('submit', function(e) {
                          e.preventDefault();
@@ -584,8 +786,92 @@ document.addEventListener('DOMContentLoaded', () => {
                      });
                  }
                  
-                 // Simula na abertura da página (com os valores padrão)
-                 simulateLoan(); 
+                 simulateLoan(); // Simula na abertura da página
+            }
+        }
+        
+        // Lógica para cartoes.html (Ativação de Botões)
+        if (isCartoesPage) {
+            
+            // 1. Preenchimento do Nome do Titular
+            const nomeCompleto = currentAccount.owner;
+            const nomeTitularElements = document.querySelectorAll('.card-holder');
+            nomeTitularElements.forEach(el => {
+                 el.textContent = nomeCompleto.toUpperCase();
+            });
+            
+            // 2. Inicialização do estado Oculto do Cartão Virtual
+            const numFisicoEl = document.getElementById('num-fisico');
+            const numVirtualEl = document.getElementById('num-virtual');
+            const cvvVirtualEl = document.getElementById('cvv-virtual');
+            const validadeVirtualEl = document.getElementById('validade-virtual');
+            const exibirDadosVirtualBtn = document.getElementById('exibir-dados');
+            const toggleFisicoDataBtn = document.getElementById('toggle-fisico-data');
+            
+            // Inicializa Físico (Estado Oculto)
+            if (numFisicoEl && currentAccount.cardData) {
+                 const lastFourFisico = currentAccount.cardData.physicalNum.slice(-4);
+                 numFisicoEl.textContent = `•••• •••• •••• ${lastFourFisico}`;
+                 
+                 if (toggleFisicoDataBtn) {
+                     toggleFisicoDataBtn.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
+                 }
+            }
+            
+            // Inicializa Virtual (Estado Oculto)
+            if (numVirtualEl && cvvVirtualEl && validadeVirtualEl && currentAccount.cardData) {
+                 const lastFourVirtual = currentAccount.cardData.virtualNum.slice(-4);
+                 numVirtualEl.textContent = `•••• •••• •••• ${lastFourVirtual}`;
+                 cvvVirtualEl.textContent = '***'; // CVV oculto
+                 
+                 if (exibirDadosVirtualBtn) {
+                     exibirDadosVirtualBtn.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
+                 }
+            }
+
+
+            // 3. Anexo dos Listeners nos Botões
+            
+            // Botão Físico: Bloquear/Desbloquear
+            const toggleFisicoBtn = document.getElementById('toggle-fisico');
+            if (toggleFisicoBtn) {
+                toggleFisicoBtn.removeEventListener('click', () => toggleCardLock(true)); 
+                toggleFisicoBtn.addEventListener('click', () => toggleCardLock(true)); // Bloqueio
+            }
+            
+            // Botão Virtual: Gerar Novo Cartão
+            const regenerateVirtualBtn = document.getElementById('regenerate-virtual');
+            if (regenerateVirtualBtn) {
+                regenerateVirtualBtn.removeEventListener('click', generateNewVirtualCard); 
+                regenerateVirtualBtn.addEventListener('click', generateNewVirtualCard); // Gerar CVV
+            }
+            
+            // Botão Físico: Exibir Dados (ID 'toggle-fisico-data')
+            if (toggleFisicoDataBtn) {
+                toggleFisicoDataBtn.removeEventListener('click', () => toggleCardData(true));
+                toggleFisicoDataBtn.addEventListener('click', () => toggleCardData(true)); // True = Físico
+            }
+            
+            // Botão Virtual: Exibir Dados (ID 'exibir-dados')
+            if (exibirDadosVirtualBtn) {
+                exibirDadosVirtualBtn.removeEventListener('click', () => toggleCardData(false));
+                exibirDadosVirtualBtn.addEventListener('click', () => toggleCardData(false)); // False = Virtual
+            }
+            
+            // Botão: Configurações (Ações que sobram - Simulação)
+            const configBtns = document.querySelectorAll('.card-actions button:not(#toggle-fisico):not(#exibir-dados):not(#regenerate-virtual):not(#toggle-fisico-data)');
+            configBtns.forEach(btn => {
+                btn.removeEventListener('click', handleConfiguration);
+                btn.addEventListener('click', handleConfiguration);
+            });
+        }
+        
+        // Lógica para solicitar-cartao.html (Solicitação de Cartão)
+        if (isSolicitacaoPage) {
+            const solicitacaoForm = document.getElementById('solicitacao-form');
+            
+            if (solicitacaoForm) {
+                solicitacaoForm.addEventListener('submit', handleCardRequest);
             }
         }
     }

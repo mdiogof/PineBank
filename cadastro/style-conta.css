@@ -484,3 +484,155 @@ body {
         margin-top: 5px;
     }
 }
+/* --- 10. ESTILIZAÇÃO DE CARTÕES (PÁGINA cartoes.html) --- */
+
+.card-vision-area {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap; /* Garante responsividade */
+    margin-bottom: 40px;
+}
+
+.card-container {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fcfcfc;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
+    font-size: 1.1em;
+    color: var(--cor-texto);
+}
+
+.card-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status-active {
+    background-color: var(--cor-receita);
+    color: white;
+}
+
+.status-locked {
+    background-color: var(--cor-despesa);
+    color: white;
+}
+
+
+/* Estilização dos Cartões de Crédito (Visual) */
+.credit-card {
+    background: linear-gradient(135deg, var(--verde-principal) 0%, #1a73e8 100%);
+    color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    aspect-ratio: 1.58 / 1; /* Proporção padrão de cartão */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    margin-bottom: 20px;
+    transition: filter 0.3s;
+}
+
+.credit-card.locked-card {
+    filter: grayscale(100%); /* Efeito visual de bloqueio */
+}
+
+.card-number {
+    font-size: 1.3em;
+    letter-spacing: 2px;
+    margin-top: 15px;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    margin-left: 10px; /* Afasta o número do chip/ícone */
+}
+
+.card-chip {
+    width: 30px;
+    height: 20px;
+    background-color: #ffd700;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    margin-top: 20px;
+}
+
+.card-cvv {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.action-btn {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    color: var(--cor-texto);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.action-primary {
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto);
+    border: none;
+}
+
+.action-primary:hover {
+    background-color: #e6c300;
+}
+
+.toggle-lock {
+    color: var(--cor-despesa);
+}
+
+.action-danger {
+    color: white;
+    background-color: var(--cor-despesa);
+}
+
+.bottom-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.solicitar-novo-cartao {
+    color: var(--verde-principal);
+    text-decoration: none;
+    font-weight: 600;
+}
+.credit-card .bandeira-icon {
+    font-size: 2.5em; /* Aumenta o ícone */
+    color: #ffd700;   /* Dá uma cor de destaque (amarelo do chip) */
+    position: absolute;
+    top: 25px;
+    right: 25px; /* Posiciona no canto superior direito */
+}
