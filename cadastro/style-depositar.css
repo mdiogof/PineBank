@@ -1,0 +1,136 @@
+/* ---------------------------------------------------------------------- */
+/* ESTILOS ESPECÍFICOS PARA A PÁGINA DE DEPÓSITO */
+/* ---------------------------------------------------------------------- */
+
+/* NOTA: As variáveis de cor (ex: var(--verde-principal)) devem ser importadas via style-conta.css */
+
+.deposit-options-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.deposit-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.deposit-card h2 {
+    color: var(--verde-principal);
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--amarelo-principal);
+    padding-bottom: 5px;
+    font-size: 1.4em;
+}
+
+.pix-info {
+    color: var(--cor-secundaria);
+    margin-bottom: 20px;
+    font-size: 0.95em;
+}
+
+/* Área do QR Code e Chave Copia e Cola */
+.qr-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.qrcode-placeholder {
+    width: 180px;
+    height: 180px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 3em;
+    color: var(--verde-principal);
+    margin-bottom: 15px;
+}
+.qrcode-placeholder p {
+    font-size: 0.4em;
+    margin-top: 5px;
+    color: var(--cor-secundaria);
+}
+
+
+.pix-key-area {
+    width: 100%;
+    max-width: 350px;
+}
+.key-label {
+    display: block;
+    font-size: 0.8em;
+    color: var(--cor-secundaria);
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.key-and-button {
+    display: flex;
+}
+
+#pix-copia-cola {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px 0 0 6px;
+    background-color: #f8f8f8;
+    font-size: 0.85em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.copy-btn {
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.copy-btn:hover {
+    background-color: #e6c300;
+}
+
+
+/* Detalhes da Transferência Tradicional */
+.traditional-card {
+    border-left: 5px solid var(--verde-principal);
+}
+
+.account-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding-top: 10px;
+}
+.detail-label {
+    display: block;
+    font-size: 0.8em;
+    color: var(--cor-secundaria);
+    margin-bottom: 3px;
+}
+.detail-value {
+    font-weight: bold;
+    color: var(--cor-texto);
+    font-size: 1em;
+}
+
+/* Responsividade em telas pequenas */
+@media (max-width: 768px) {
+    .deposit-options-container {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .account-details-grid {
+        grid-template-columns: 1fr;
+    }
+}

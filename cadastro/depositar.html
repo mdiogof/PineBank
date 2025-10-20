@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Depositar | Banco Pineapple</title>
+    
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="style-depositar.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="page-depositar">
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+                <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+                <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                <a href="cofrinho.html" class="nav-item"><i class="fas fa-piggy-bank"></i> Cofrinho</a>
+                <a href="#" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Depositar na sua Conta 💵</h1>
+                <p>Receba dinheiro de forma instantânea e gratuita via PIX.</p>
+            </header>
+
+            <div class="deposit-options-container">
+                
+                <section class="deposit-card pix-card">
+                    <h2>PIX Instantâneo</h2>
+                    <p class="pix-info">Compartilhe o QR Code ou a chave 'Copia e Cola' para receber qualquer valor imediatamente.</p>
+                    
+                    <div class="qr-area">
+                        <div id="qrcode-canvas" class="qrcode-placeholder">
+                            <i class="fas fa-qrcode"></i>
+                            <p>Gerando QR Code...</p>
+                        </div>
+                        <div class="pix-key-area">
+                            <span class="key-label">CHAVE PIX (Copia e Cola)</span>
+                            <div class="key-and-button">
+                                <input type="text" id="pix-copia-cola" readonly value="NOME DO BANCO | CHAVE DO CLIENTE">
+                                <button class="copy-btn" id="copy-pix-btn" onclick="copyToClipboard('pix-copia-cola')">
+                                    <i class="fas fa-copy"></i> Copiar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="deposit-card traditional-card">
+                    <h2>Transferência Tradicional (TED/DOC)</h2>
+                    <p class="pix-info">Para receber de bancos que não aceitam PIX ou para depósitos via boleto (em breve).</p>
+
+                    <div class="account-details-grid">
+                        <div>
+                            <span class="detail-label">Banco</span>
+                            <span class="detail-value">Pineapple Bank S.A. (300)</span>
+                        </div>
+                        <div>
+                            <span class="detail-label">Agência</span>
+                            <span class="detail-value" id="detail-agency">0001</span>
+                        </div>
+                        <div>
+                            <span class="detail-label">Conta Corrente</span>
+                            <span class="detail-value" id="detail-account">123456-7</span>
+                        </div>
+                        <div>
+                            <span class="detail-label">Titular</span>
+                            <span class="detail-value" id="detail-owner">Nome do Titular</span>
+                        </div>
+                        <div>
+                            <span class="detail-label">CPF</span>
+                            <span class="detail-value">***.***.***-**</span>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="bank-system.js"></script> 
+    <script src="app-depositar.js"></script>
+    <script>
+        // Função utilitária para copiar texto (ativa o botão)
+        function copyToClipboard(elementId) {
+            const copyText = document.getElementById(elementId);
+            copyText.select();
+            copyText.setSelectionRange(0, 99999); 
+            document.execCommand("copy");
+            alert("Código PIX copiado para a área de transferência!");
+        }
+    </script>
+</body>
+</html>
