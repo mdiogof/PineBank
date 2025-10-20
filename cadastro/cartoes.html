@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Cartões | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="bank-system.js"></script> 
+</head>
+<body class="page-cartoes"> 
+    <div class="dashboard-container">
+
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+           <nav class="main-nav">
+    <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+    <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+    <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+    <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+    <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+    <a href="cofrinho.html" class="nav-item"><i class="fas fa-piggy-bank"></i> Cofrinho</a> 
+    <a href="login.html" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+</nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Seus Cartões Pineapple</h1>
+                <p>Gerencie seus cartões de forma simples e segura.</p>
+            </header>
+
+            <section class="card-vision-area">
+                
+                <div id="card-fisico-container" class="card-container">
+                    <div class="card-header">
+                        <h2>Cartão Pineapple (Físico)</h2>
+                        <span id="card-status-fisico" class="card-status status-active">ATIVO</span>
+                    </div>
+                    
+                    <div class="credit-card type-mastercard physical">
+                        <i class="fab fa-cc-mastercard bandeira-icon"></i> 
+                        <span class="card-chip"></span>
+                        <p class="card-number" id="num-fisico">•••• •••• •••• 1234</p>
+                        <div class="card-footer">
+                            <span class="card-holder">BRENDO RYAN D. M.</span>
+                            <span class="card-validity" id="validade-fisico">01/29</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button id="toggle-fisico" class="action-btn toggle-lock"><i class="fas fa-lock-open"></i> Bloquear Temporariamente</button>
+                        <button id="toggle-fisico-data" class="action-btn"><i class="fas fa-eye"></i> Exibir Dados</button>
+                    </div>
+                </div>
+
+                <div id="card-virtual-container" class="card-container">
+                    <div class="card-header">
+                        <h2>Cartão Virtual (Online)</h2>
+                        <span id="card-status-virtual" class="card-status status-active">ATIVO</span>
+                    </div>
+                    
+                    <div class="credit-card type-mastercard virtual">
+                        <i class="fas fa-wifi chip-icon"></i>
+                        <p class="card-number" id="num-virtual">•••• •••• •••• 5678</p>
+                        <p class="card-cvv">CVV: <span id="cvv-virtual">***</span></p> <div class="card-footer">
+                            <span class="card-holder">BRENDO RYAN D. M.</span>
+                            <span class="card-validity" id="validade-virtual">01/29</span>
+                        </div>
+                    </div>
+                    
+                    <div class="card-actions">
+                        <button id="regenerate-virtual" class="action-btn action-primary"><i class="fas fa-redo"></i> Gerar Novo Cartão</button>
+                        <button id="exibir-dados" class="action-btn"><i class="fas fa-eye"></i> Exibir Dados</button>
+                    </div>
+                </div>
+            </section>
+            
+            <section class="bottom-info">
+                <a href="solicitar-cartao.html" class="solicitar-novo-cartao"><i class="fas fa-plus-circle"></i> Solicitar 2ª via ou novo cartão físico</a>
+            </section>
+
+        </main>
+    </div>
+</body>
+</html>

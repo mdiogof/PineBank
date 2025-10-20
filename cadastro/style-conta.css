@@ -48,7 +48,7 @@ body {
     padding-top: 20px;
 }
 
-/* CORREÇÃO CRÍTICA: AUMENTA O LOGO NA BARRA LATERAL */
+/* AUMENTA O LOGO NA BARRA LATERAL */
 .logo-small {
     width: 150px;  /* Tamanho Maior */
     height: 150px; 
@@ -482,5 +482,274 @@ body {
     .filter-select, .filter-input, .filter-button {
         width: 100%;
         margin-top: 5px;
+    }
+}
+/* --- 10. ESTILIZAÇÃO DE CARTÕES (PÁGINA cartoes.html) --- */
+
+.card-vision-area {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap; /* Garante responsividade */
+    margin-bottom: 40px;
+}
+
+.card-container {
+    flex: 1;
+    min-width: 300px;
+    background-color: #fcfcfc;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-header h2 {
+    font-size: 1.1em;
+    color: var(--cor-texto);
+}
+
+.card-status {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.status-active {
+    background-color: var(--cor-receita);
+    color: white;
+}
+
+.status-locked {
+    background-color: var(--cor-despesa);
+    color: white;
+}
+
+
+/* Estilização dos Cartões de Crédito (Visual) */
+.credit-card {
+    background: linear-gradient(135deg, var(--verde-principal) 0%, #1a73e8 100%);
+    color: #fff;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    aspect-ratio: 1.58 / 1; /* Proporção padrão de cartão */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    position: relative;
+    margin-bottom: 20px;
+    transition: filter 0.3s;
+}
+
+.credit-card.locked-card {
+    filter: grayscale(100%); /* Efeito visual de bloqueio */
+}
+
+.card-number {
+    font-size: 1.3em;
+    letter-spacing: 2px;
+    margin-top: 15px;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    margin-left: 10px; /* Afasta o número do chip/ícone */
+}
+
+.card-chip {
+    width: 30px;
+    height: 20px;
+    background-color: #ffd700;
+    border-radius: 3px;
+    display: inline-block;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8em;
+    margin-top: 20px;
+}
+
+.card-cvv {
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.action-btn {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    background-color: #f0f0f0;
+    color: var(--cor-texto);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #e0e0e0;
+}
+
+.action-primary {
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto);
+    border: none;
+}
+
+.action-primary:hover {
+    background-color: #e6c300;
+}
+
+.toggle-lock {
+    color: var(--cor-despesa);
+}
+
+.action-danger {
+    color: white;
+    background-color: var(--cor-despesa);
+}
+
+.bottom-info {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.solicitar-novo-cartao {
+    color: var(--verde-principal);
+    text-decoration: none;
+    font-weight: 600;
+}
+.credit-card .bandeira-icon {
+    font-size: 2.5em; /* Aumenta o ícone */
+    color: #ffd700;   /* Dá uma cor de destaque (amarelo do chip) */
+    position: absolute;
+    top: 25px;
+    right: 25px; /* Posiciona no canto superior direito */
+}
+/* ---------------------------------------------------------------------- */
+/* --- 11. ESTILIZAÇÃO DE INVESTIMENTOS (PÁGINA investimentos.html) --- */
+/* ---------------------------------------------------------------------- */
+
+.invest-summary {
+    background: linear-gradient(135deg, var(--verde-principal) 0%, #2e7d32 100%);
+    color: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.invest-summary h2 {
+    font-size: 1.1em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 5px;
+    font-weight: 400;
+}
+
+.invest-value {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--amarelo-principal);
+}
+
+.rentabilidade {
+    text-align: right;
+}
+
+.rentabilidade p {
+    font-size: 0.9em;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 5px;
+}
+
+.rentabilidade .ganho {
+    font-size: 1.5em;
+    font-weight: 600;
+    color: var(--amarelo-principal);
+}
+
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.product-card {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-decoration: none;
+    color: var(--cor-texto);
+    border-left: 5px solid var(--amarelo-principal);
+    display: flex;
+    align-items: center;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.product-icon {
+    font-size: 2.5em;
+    color: var(--verde-principal);
+    margin-right: 20px;
+    min-width: 50px;
+    text-align: center;
+}
+
+.product-details h3 {
+    font-size: 1.3em;
+    color: var(--verde-principal);
+    margin-bottom: 5px;
+}
+
+.product-details p {
+    font-size: 0.9em;
+    color: var(--cor-secundaria);
+}
+
+.call-to-action-invest {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: var(--amarelo-principal);
+    border-radius: 12px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--cor-texto);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsividade específica para Investimentos */
+@media (max-width: 600px) {
+    .invest-summary {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .rentabilidade {
+        text-align: left;
+        margin-top: 20px;
+        border-top: 1px dashed rgba(255, 255, 255, 0.4);
+        padding-top: 10px;
+        width: 100%;
+    }
+    .product-list {
+        grid-template-columns: 1fr;
     }
 }

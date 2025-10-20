@@ -5,6 +5,7 @@ const AGENCY_ID = '0001';
 
 // Função para desformatar conta para pesquisa: 12345-6 -> 123456
 function desformatarConta(contaFormatada) {
+    // Remove qualquer caractere que não seja dígito (incluindo o hífen)
     return contaFormatada.replace(/[^\d]/g, '').padStart(6, '0');
 }
 
@@ -29,7 +30,6 @@ function mostrarMensagem(msg, tipo = 'erro') {
 function login(e) {
     e.preventDefault(); 
     
-    // Seleção dos campos DENTRO da função de evento
     const inputConta = document.getElementById('conta');
     const inputSenha = document.getElementById('senha');
     
@@ -57,8 +57,6 @@ function login(e) {
     // 1. TENTA LOGAR COM AS CONTAS DE TESTE
     if (bankData.accounts[accountKey] && senhaDigitada === '123') {
         usuarioEncontrado = bankData.accounts[accountKey];
-        usuarioEncontrado.agencia = AGENCY_ID;
-        usuarioEncontrado.conta = contaPuraDigitada;
     } 
     
     // 2. TENTA LOGAR COM USUÁRIOS NOVOS CADASTRADOS
@@ -77,12 +75,14 @@ function login(e) {
     }
     
     // 3. LOGIN BEM-SUCEDIDO: Configura e Salva o usuário logado
+    
     const contaLogada = {
         nome: usuarioEncontrado.owner || usuarioEncontrado.nome,
-        agencia: usuarioEncontrado.agencia || AGENCY_ID,
-        conta: usuarioEncontrado.account || usuarioEncontrado.conta
+        // CORREÇÃO FINAL: Garante que a Agência seja '0001' e a Conta pura seja salva.
+        agencia: AGENCY_ID, 
+        conta: contaPuraDigitada 
     };
-
+    
     localStorage.setItem('usuarioLogado', JSON.stringify(contaLogada));
     mostrarMensagem(`Bem-vindo, ${contaLogada.nome.split(' ')[0]}! Redirecionando...`, 'sucesso');
 
@@ -96,11 +96,12 @@ function login(e) {
 document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.querySelector('.login-form');
     
-    // Inicialização do Sistema (Para garantir que os dados estejam prontos)
+    // 1. Inicialização do Sistema (Garantia de que os dados estão prontos)
     if (window.loadBankData && typeof window.loadBankData === 'function') {
         window.loadBankData(); 
     }
 
+    // 2. Anexar o evento de login
     if (formLogin) {
         // Anexa a função 'login' que contém o e.preventDefault()
         formLogin.addEventListener('submit', login); 

@@ -1,0 +1,218 @@
+/* ---------------------------------------------------------------------- */
+/* 1. Variáveis de Cor (Tema Pineapple) e Reset Básico */
+/* ---------------------------------------------------------------------- */
+:root {
+    --amarelo-principal: #FFD700;
+    --verde-principal: #388e3c;
+    --cor-fundo: #f4f4f9;
+    --cor-texto: #333;
+    --cor-secundaria: #6c757d;
+    --cor-sucesso: #4CAF50;
+    --cor-borda: #ccc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Alinha no topo */
+    min-height: 100vh;
+    padding: 20px;
+    padding-bottom: 50px; 
+}
+
+/* ---------------------------------------------------------------------- */
+/* 2. Layout Principal */
+/* ---------------------------------------------------------------------- */
+.emprestimo-container {
+    width: 100%;
+    max-width: 550px;
+    padding: 20px;
+}
+
+.btn-voltar-home {
+    display: inline-block;
+    color: var(--verde-principal);
+    text-decoration: none;
+    margin-bottom: 20px;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.btn-voltar-home i {
+    margin-right: 8px;
+}
+
+.btn-voltar-home:hover {
+    color: #2e7032;
+}
+
+.emprestimo-card {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+}
+
+/* ---------------------------------------------------------------------- */
+/* 3. Header e Formulário */
+/* ---------------------------------------------------------------------- */
+.header-simulador {
+    margin-bottom: 30px;
+}
+
+.header-simulador .logo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.header-simulador h2 {
+    color: var(--verde-principal);
+    margin-bottom: 5px;
+    font-size: 1.8em;
+}
+
+.header-simulador p {
+    color: var(--cor-secundaria);
+    font-size: 0.9em;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left; /* Mantém inputs e labels alinhados à esquerda */
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--cor-texto);
+}
+
+#valor, #parcelas {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    font-size: 1em;
+}
+
+.simular-button, .contratar-button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto); 
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 10px;
+}
+
+.simular-button:hover, .contratar-button:hover {
+    background-color: #e6c300;
+}
+
+/* --- NOVO: EXIBIÇÃO DE LIMITE --- */
+.disponibilidade-limite {
+    /* CORREÇÃO: Garante que o texto fique centralizado */
+    text-align: center; 
+    margin-top: 20px;
+    margin-bottom: 20px; 
+    color: var(--cor-secundaria);
+    font-size: 0.95em;
+}
+
+
+/* ---------------------------------------------------------------------- */
+/* 4. Área de Resultados - CORREÇÃO DE ALINHAMENTO */
+/* ---------------------------------------------------------------------- */
+#loan-results {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--cor-borda);
+    text-align: center; /* Centraliza o título H3 e o botão Contratar */
+}
+
+.results-area h3 {
+    color: var(--verde-principal);
+    margin-bottom: 20px;
+    font-size: 1.5em;
+}
+
+.result-details {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    /* Centraliza o bloco de valores (grid) dentro do card */
+    width: 90%; 
+    max-width: 400px;
+    margin: 0 auto 20px auto; 
+    text-align: left; /* Garante que os rótulos fiquem à esquerda */
+}
+
+.result-details p {
+    color: var(--cor-secundaria);
+    font-weight: 500;
+}
+
+.result-details span {
+    font-weight: bold;
+    color: var(--cor-texto);
+    text-align: right; /* Alinha os valores à direita */
+}
+
+.total-destaque {
+    color: var(--verde-principal) !important;
+    font-size: 1.1em;
+    padding-top: 5px;
+    border-top: 1px dashed var(--cor-borda);
+}
+
+.hidden {
+    display: none !important;
+}
+
+.debito-automatico-info {
+    background-color: #f0fff0;
+    border: 1px solid var(--cor-sucesso);
+    color: var(--cor-sucesso);
+    padding: 15px;
+    border-radius: 8px;
+    margin: 0 auto 20px auto; /* Centraliza o box de débito */
+    max-width: 400px;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+.debito-automatico-info i {
+    margin-right: 8px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* 5. Responsividade */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 550px) {
+    .emprestimo-card {
+        padding: 30px 20px;
+    }
+    .result-details {
+        width: 100%;
+        padding: 0 5px;
+    }
+    .debito-automatico-info {
+        width: 100%;
+        margin: 0 0 20px 0;
+    }
+}

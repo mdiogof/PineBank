@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Investimentos | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="page-investimentos">
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+            <nav class="main-nav">
+    <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+    <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+    <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+    <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+    <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+    <a href="cofrinho.html" class="nav-item"><i class="fas fa-piggy-bank"></i> Cofrinho</a> 
+    <a href="login.html" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+</nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Seu Jardim de Investimentos 🍍</h1>
+                <p>Onde seu dinheiro cresce de forma segura e doce.</p>
+            </header>
+            
+            <section class="invest-summary">
+                <div class="summary-left">
+                    <h2>Total Investido</h2>
+                    <span class="invest-value" id="total-investido">R$ 10.000,00</span>
+                </div>
+                <div class="rentabilidade">
+                    <p>Rentabilidade no Mês</p>
+                    <span class="ganho" id="rentabilidade-mes">+ R$ 82,50 (0,82%)</span>
+                </div>
+            </section>
+
+            <section class="quick-actions">
+                <a href="#" class="action-item">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Aportar</span>
+                </a>
+                <a href="#" class="action-item">
+                    <i class="fas fa-file-export"></i>
+                    <span>Resgatar</span>
+                </a>
+                <a href="#" class="action-item">
+                    <i class="fas fa-calculator"></i>
+                    <span>Simulador</span>
+                </a>
+                <a href="#" class="action-item">
+                    <i class="fas fa-headset"></i>
+                    <span>Consultoria</span>
+                </a>
+            </section>
+            
+            <section class="investment-products">
+                <h2>Conheça Nossos Produtos de Renda Fixa</h2>
+                <div class="product-list">
+                    
+                    <a href="#" class="product-card" id="card-cdb">
+                        <i class="product-icon fas fa-certificate"></i>
+                        <div class="product-details">
+                            <h3>CDB Pineapple</h3>
+                            <p>Baixo risco, rendimento atrelado ao CDI. Ideal para reserva de emergência.</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="product-card" id="card-tesouro">
+                        <i class="product-icon fas fa-shield-alt"></i>
+                        <div class="product-details">
+                            <h3>Tesouro Direto</h3>
+                            <p>Garantido pelo Tesouro Nacional. Rentabilidade prefixada e atrelada à inflação.</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="product-card" id="card-lci">
+                        <i class="product-icon fas fa-house-damage"></i>
+                        <div class="product-details">
+                            <h3>LCI e LCA</h3>
+                            <p>Isentos de Imposto de Renda. Focados no setor imobiliário e agronegócio.</p>
+                        </div>
+                    </a>
+
+                    <a href="#" class="product-card" id="card-fundos">
+                        <i class="product-icon fas fa-chart-pie"></i>
+                        <div class="product-details">
+                            <h3>Fundos de Investimento</h3>
+                            <p>Diversifique com a gestão de nossos especialistas. Renda Fixa ou Multimercado.</p>
+                        </div>
+                    </a>
+                </div>
+            </section>
+            
+            <div class="call-to-action-invest">
+                Pronto para investir? Fale com nosso consultor via chat para tirar dúvidas.
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="bank-system.js"></script> 
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cofrinho | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="style-cofrinho.css"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="page-cofrinho">
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+                <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+                <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                <a href="cofrinho.html" class="nav-item active"><i class="fas fa-piggy-bank"></i> Cofrinho</a> 
+                <a href="#" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Seu Cofrinho 🐷</h1>
+                <p>Metas e sonhos ao seu alcance, protegidos e rendendo.</p>
+            </header>
+            
+            <section class="cofrinho-summary">
+                <div class="summary-details">
+                    <span class="total-saved-label">Total Guardado</span>
+                    <span class="total-saved-value" id="total-cofrinho">R$ 0,00</span>
+                    <p class="next-goal-info" id="next-goal-info">Nenhuma meta ativa.</p>
+                </div>
+                <div class="cofrinho-actions">
+                    <a href="#" class="action-item" id="btn-new-goal">
+                        <i class="fas fa-plus"></i>
+                        <span>Nova Meta</span>
+                    </a>
+                    <a href="#" class="action-item">
+                        <i class="fas fa-arrow-circle-up"></i>
+                        <span>Aportar</span>
+                    </a>
+                    <a href="#" class="action-item action-danger">
+                        <i class="fas fa-arrow-circle-down"></i>
+                        <span>Resgatar</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="new-goal-form-area hidden" id="new-goal-form-area">
+                <h2>Criar Nova Meta</h2>
+                <form id="new-goal-form" class="form-container">
+                    <div class="input-group">
+                        <label for="goal-name">Nome da Meta</label>
+                        <input type="text" id="goal-name" placeholder="Ex: Viagem para o Algarve" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="goal-target">Valor Total da Meta (R$)</label>
+                        <input type="number" id="goal-target" placeholder="5000.00" min="100" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="initial-deposit">Depósito Inicial (R$)</label>
+                        <input type="number" id="initial-deposit" placeholder="50.00" min="0">
+                        <p class="form-help">Valor será debitado do seu saldo atual.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="button button-primary">Criar Cofrinho</button>
+                        <button type="button" class="button button-secondary" id="btn-cancel-goal">Cancelar</button>
+                    </div>
+                </form>
+            </section>
+            
+            <section class="goal-list-section">
+                <h2>Metas Ativas</h2>
+                <div class="goal-list" id="goal-list">
+                    <p class="empty-state" id="empty-state">Clique em "Nova Meta" para começar a economizar para seus sonhos.</p>
+                </div>
+            </section>
+
+            <div class="modal-overlay hidden" id="movimentar-modal">
+                <div class="modal-content">
+                    <button class="modal-close" id="close-modal-btn">&times;</button>
+                    <h2 id="modal-title">Movimentar Cofrinho</h2>
+                    
+                    <form id="movimentar-form">
+                        <div class="input-group">
+                            <label for="select-goal">Selecione a Meta</label>
+                            <select id="select-goal" required>
+                                </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="movimentar-value">Valor (R$)</label>
+                            <input type="number" id="movimentar-value" placeholder="100,00" min="0.01" step="0.01" required>
+                        </div>
+                        
+                        <p class="modal-info-text" id="info-saldo">Seu saldo atual: R$ X.XXX,XX</p>
+                        
+                        <div class="form-actions-modal">
+                            <button type="submit" class="button button-danger" id="resgatar-btn" style="display:none;">Resgatar</button>
+                            <button type="submit" class="button button-primary" id="aportar-btn" style="display:none;">Aportar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="bank-system.js"></script> 
+</body>
+</html>
