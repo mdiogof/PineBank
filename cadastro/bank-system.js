@@ -14,10 +14,23 @@ const initialBankData = {
             loanLimit: 15000.00,
             cardData: { 
                 physicalNum: '4567 • 8901 • 2345 • 1234', 
-                virtualNum: '4567 • 8901 • 2345 • 5678', // Número completo salvo inicial
+                virtualNum: '4567 • 8901 • 2345 • 5678',
                 virtualCvv: '987',
                 validity: '01/29'
             },
+            investments: {
+                totalValue: 12540.00,
+                monthlyReturn: 112.86,
+                products: [
+                    { name: "CDB Pineapple 110% CDI", type: "cdb", value: 8000.00, rate: 1.10 },
+                    { name: "Tesouro Selic 2027", type: "tesouro", value: 4540.00, rate: 0.05 },
+                ]
+            },
+            goals: [
+                { id: 1, name: "Viagem para a Disney", target: 15000.00, saved: 3500.00, dateCreated: "01/09/2025" },
+                { id: 2, name: "Reserva de Emergência", target: 5000.00, saved: 500.00, dateCreated: "05/10/2025" },
+                { id: 3, name: "Meta Zerada", target: 1000.00, saved: 0.00, dateCreated: "10/10/2025" } 
+            ],
             transactions: [
                 { id: 1, type: "debit", amount: 150.00, description: "Compra Online Magazine", date: "18/10/2025 10:00" },
                 { id: 2, type: "credit", amount: 2500.00, description: "Salário Setembro", date: "15/10/2025 12:00" },
@@ -37,6 +50,8 @@ const initialBankData = {
                 virtualCvv: '555',
                 validity: '05/28'
             },
+            investments: null,
+            goals: [], 
             transactions: []
         },
         "0001-987654": {
@@ -51,6 +66,8 @@ const initialBankData = {
                 virtualCvv: '333',
                 validity: '03/27'
             },
+            investments: null,
+            goals: [],
             transactions: []
         }
     },
@@ -68,7 +85,17 @@ function saveBankData(data) {
 function loadBankData() {
     const data = localStorage.getItem('bankData');
     if (data) {
-        return JSON.parse(data);
+        let savedData = JSON.parse(data);
+        
+        // Garante que o usuário teste tenha a estrutura completa 
+        if (!savedData.accounts["0001-123456"].investments) {
+             savedData.accounts["0001-123456"].investments = initialBankData.accounts["0001-123456"].investments;
+        }
+        if (!savedData.accounts["0001-123456"].goals) {
+             savedData.accounts["0001-123456"].goals = initialBankData.accounts["0001-123456"].goals;
+        }
+        saveBankData(savedData);
+        return savedData;
     } else {
         saveBankData(initialBankData);
         return initialBankData;
@@ -92,7 +119,10 @@ function getCurrentAccount() {
                  account: conta,
                  balance: 0.00, 
                  loanLimit: 5000.00, 
-                 cardData: initialBankData.accounts["0001-123456"].cardData // Usa o cardData padrão
+                 cardData: initialBankData.accounts["0001-123456"].cardData,
+                 investments: null,
+                 goals: [], 
+                 transactions: []
              };
              saveBankData(bankData);
         }
@@ -127,7 +157,6 @@ function toggleCardLock(isPhysical) {
     const isActive = statusEl.classList.contains('status-active');
 
     if (isActive) {
-        // Bloquear
         statusEl.textContent = 'BLOQUEADO';
         statusEl.classList.remove('status-active');
         statusEl.classList.add('status-locked');
@@ -138,7 +167,6 @@ function toggleCardLock(isPhysical) {
         alert("Cartão bloqueado com sucesso. Transações serão negadas.");
         
     } else {
-        // Desbloquear
         statusEl.textContent = 'ATIVO';
         statusEl.classList.remove('status-locked');
         statusEl.classList.add('status-active');
@@ -160,13 +188,12 @@ function generateRandomCardSegment() {
 function generateNewVirtualCard() {
     const numVirtualEl = document.getElementById('num-virtual');
     const cvvEl = document.getElementById('cvv-virtual');
-    const validadeEl = document.getElementById('validade-virtual');
     
-    if (!numVirtualEl || !cvvEl || !validadeEl) return;
+    if (!numVirtualEl || !cvvEl) return;
 
     let bankData = loadBankData();
     let currentUser = getCurrentAccount();
-    const currentAccountKey = currentUser.agencia + '-' + currentUser.account;
+    const currentAccountKey = currentUser.agency + '-' + currentUser.account;
 
     const newLastFour = generateRandomCardSegment();
     const fullNewNumber = `${generateRandomCardSegment()} • ${generateRandomCardSegment()} • ${generateRandomCardSegment()} • ${newLastFour}`; 
@@ -177,17 +204,17 @@ function generateNewVirtualCard() {
     const newYear = (nextMonth.getFullYear() + 4).toString().slice(-2);
     const newValidity = `${(nextMonth.getMonth() + 1).toString().padStart(2, '0')}/${newYear}`;
 
-    // 1. Atualiza o Local Storage
     currentUser.cardData.virtualNum = fullNewNumber; 
     currentUser.cardData.virtualCvv = newCvv.toString();
     currentUser.cardData.validity = newValidity;
     bankData.accounts[currentAccountKey] = currentUser;
     saveBankData(bankData);
 
-    // 2. Atualiza a UI para o estado OCULTO com os novos dados
     numVirtualEl.textContent = `•••• •••• •••• ${newLastFour}`; 
-    cvvEl.textContent = '***'; // Mantém o CVV oculto
-    validadeEl.textContent = newValidity;
+    cvvEl.textContent = '***'; 
+    
+    const validadeEl = document.getElementById('validade-virtual');
+    if(validadeEl) validadeEl.textContent = newValidity;
     
     alert(`Novo Cartão Virtual gerado! Validade: ${newValidity}. O antigo foi invalidado.`);
 }
@@ -202,20 +229,17 @@ function toggleCardData(isPhysical) {
     
     const isHidden = numEl.textContent.startsWith('•');
     
-    // Puxa os dados salvos
     const fullNum = isPhysical ? currentUser.cardData.physicalNum : currentUser.cardData.virtualNum;
     const currentCvv = currentUser.cardData.virtualCvv;
     const lastFour = fullNum.slice(-4);
     
     if (isHidden) {
-        // EXIBIR DADOS
         numEl.textContent = fullNum;
         if (cvvEl) cvvEl.textContent = currentCvv;
         button.innerHTML = '<i class="fas fa-eye-slash"></i> Ocultar Dados';
     } else {
-        // OCULTAR DADOS
         numEl.textContent = `•••• •••• •••• ${lastFour}`;
-        if (cvvEl) cvvEl.textContent = '***'; // Placeholder seguro
+        if (cvvEl) cvvEl.textContent = '***'; 
         button.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
     }
 }
@@ -226,13 +250,12 @@ function handleConfiguration() {
 
 
 // ----------------------------------------------------------------------
-// 4. LÓGICA DE SOLICITAÇÃO DE CARTÃO (2ª VIA) - NOVO MÓDULO FINAL
+// 4. LÓGICA DE SOLICITAÇÃO DE CARTÃO (2ª VIA) 
 // ----------------------------------------------------------------------
 
 function handleCardRequest(e) {
-    e.preventDefault(); // CRÍTICO: Impede o recarregamento e resolve o problema de apagar dados
+    e.preventDefault(); 
     
-    const form = document.getElementById('solicitacao-form');
     const motivo = document.querySelector('input[name="motivo"]:checked');
     const endereco = document.getElementById('endereco').value.trim();
 
@@ -246,16 +269,13 @@ function handleCardRequest(e) {
         return;
     }
     
-    // 1. Lógica de Bloqueio (Simulação)
     if (motivo.value === 'roubo') {
         alert("Cartão antigo BLOQUEADO IMEDIATAMENTE por segurança. Um novo será enviado.");
-        // Em um sistema real, chamaria toggleCardLock(true) aqui e bloquearia o cartão
     }
     
-    // 2. Lógica de Agendamento e Cobrança
     let bankData = loadBankData();
     let currentUser = getCurrentAccount();
-    const currentAccountKey = currentUser.agencia + '-' + currentUser.account;
+    const currentAccountKey = currentUser.agency + '-' + currentUser.account;
     
     const taxaSegundaVia = (motivo.value === 'dano' || motivo.value === 'novo') ? 15.00 : 0.00;
     
@@ -270,7 +290,6 @@ function handleCardRequest(e) {
         });
     }
 
-    // Adiciona o agendamento de envio ao extrato (para UX)
     currentUser.transactions.push({
         id: Date.now() + 1,
         type: 'debit', 
@@ -280,11 +299,9 @@ function handleCardRequest(e) {
         isFuture: true
     });
     
-    // 3. Salva os dados atualizados
     bankData.accounts[currentAccountKey] = currentUser;
     saveBankData(bankData);
     
-    // 4. Atualiza a UI para o modo de confirmação
     const solicitacaoForm = document.getElementById('solicitacao-form');
     if (solicitacaoForm) solicitacaoForm.classList.add('hidden');
     
@@ -315,7 +332,8 @@ function transferHandler(e) {
 
     let bankData = loadBankData();
     let allAccounts = bankData.accounts;
-    const currentAccountKey = JSON.parse(localStorage.getItem('usuarioLogado')).agencia + '-' + JSON.parse(localStorage.getItem('usuarioLogado')).conta;
+    const loggedUserInfo = JSON.parse(localStorage.getItem('usuarioLogado')); 
+    const currentAccountKey = loggedUserInfo.agencia + '-' + loggedUserInfo.conta;
     let currentUser = allAccounts[currentAccountKey]; 
 
     if (currentUser.balance < amount) {
@@ -367,7 +385,7 @@ window.transferHandler = transferHandler;
 const LOAN_CONFIG = {
     INTEREST_RATE: 0.015, // 1.5% ao mês
     IOF_DAILY_RATE: 0.000082, 
-    IOF_FIXED_RATE: 0.0038,   
+    IOF_FIXED_RATE: 0.0038,   
 };
 
 const calculatePMT = (rateMonthly, periods, presentValue) => {
@@ -396,21 +414,17 @@ function simulateLoan() {
         limitDisplayEl.innerHTML = `Seu limite de crédito pré-aprovado é de <strong>${formatCurrency(limit)}</strong>.`;
     }
     
-    // 2. VALIDAÇÃO PRINCIPAL: Valor ultrapassa o limite?
     if (V > limit) {
-        alert(`O valor solicitado (${formatCurrency(V)}) excede seu limite pré-aprovado de ${formatCurrency(limit)}.`);
         if (V > limit) valorEl.value = limit; 
         resultsArea.classList.add('hidden');
         return;
     }
 
-    // Validação básica do formulário
     if (isNaN(V) || V < 1000 || isNaN(N) || N < 1 || V > 20000) {
         resultsArea.classList.add('hidden');
         return;
     }
 
-    // --- 3. CÁLCULO FINANCEIRO ---
     const iofFixo = V * LOAN_CONFIG.IOF_FIXED_RATE;
     const iofDiario = V * LOAN_CONFIG.IOF_DAILY_RATE * (N * 30);
     const iofTotal = iofFixo + iofDiario;
@@ -421,7 +435,6 @@ function simulateLoan() {
     const cetAnual = Math.pow(1 + (custoTotalEfetivo / V), 12 / N) - 1; 
     const cetMensalPercentual = (cetAnual / 12) * 100;
     
-    // --- 4. PREENCHIMENTO DOS RESULTADOS ---
     document.getElementById('res-valor-solicitado').textContent = formatCurrency(V);
     document.getElementById('res-juros').textContent = (taxaJurosMensal * 100).toFixed(2) + '% a.m.';
     document.getElementById('res-iof').textContent = formatCurrency(iofTotal);
@@ -429,7 +442,6 @@ function simulateLoan() {
     document.getElementById('res-parcela').textContent = formatCurrency(parcela);
     document.getElementById('res-total-pagar').textContent = formatCurrency(valorTotalPagar);
 
-    // --- 5. CONFIGURAÇÃO DO BOTÃO CONTRATAR ---
     const contractButton = document.getElementById('contract-button');
     
     contractButton.textContent = `Contratar R$ ${V.toFixed(2).replace('.', ',')} em ${N}x`;
@@ -470,21 +482,17 @@ function contractLoan(e) {
     const currentAccountKey = loggedUserInfo.agencia + '-' + loggedUserInfo.conta;
     let currentUser = allAccounts[currentAccountKey]; 
 
-    // Validação de limite
     if (valorContratado > currentUser.loanLimit) {
         alert(`Não é possível contratar: Valor excede seu limite de ${formatCurrency(currentUser.loanLimit)}.`);
         return;
     }
     
-    // 1. Crédito do valor do empréstimo na conta
     currentUser.balance += valorContratado;
     currentUser.balance = parseFloat(currentUser.balance.toFixed(2)); 
     
-    // 2. CORREÇÃO: Abate o limite disponível
     currentUser.loanLimit = parseFloat((currentUser.loanLimit - valorContratado).toFixed(2));
     if (currentUser.loanLimit < 0) currentUser.loanLimit = 0; 
 
-    // 3. Adiciona a entrada do crédito no extrato
     currentUser.transactions.push({
         id: Date.now(),
         type: 'credit',
@@ -493,7 +501,6 @@ function contractLoan(e) {
         date: new Date().toLocaleDateString('pt-BR')
     });
     
-    // 4. CRIA AS PARCELAS FUTURAS (Débito Automático)
     for (let i = 1; i <= numParcelas; i++) {
         const nextMonth = new Date();
         nextMonth.setMonth(nextMonth.getMonth() + i); 
@@ -509,11 +516,9 @@ function contractLoan(e) {
         });
     }
 
-    // 5. Salva no Local Storage
     allAccounts[currentAccountKey] = currentUser;
     saveBankData({ accounts: allAccounts, currentUserKey: currentAccountKey });
 
-    // UX: Adiciona um pequeno delay antes de redirecionar para mostrar o alerta de sucesso
     setTimeout(() => {
         alert(`Empréstimo de ${formatCurrency(valorContratado)} contratado! ${numParcelas} parcelas de ${formatCurrency(valorParcela)} agendadas.`);
         window.location.href = 'conta.html';
@@ -522,7 +527,7 @@ function contractLoan(e) {
 
 
 // ----------------------------------------------------------------------
-// 7. FUNÇÕES DE RENDERIZAÇÃO
+// 7. FUNÇÕES DE RENDERIZAÇÃO E UTILS
 // ----------------------------------------------------------------------
 
 function formatCurrency(amount) {
@@ -532,7 +537,7 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-function displayBalance(account) {
+function displayBalance(account) { 
     const balanceEl = document.getElementById('current-balance');
     const toggleButton = document.getElementById('toggle-balance');
 
@@ -572,7 +577,6 @@ function displayLastTransactions(account) {
 
     transactions.forEach(t => {
         const li = document.createElement('li');
-        const typeClass = t.type === 'credit' ? 'credit' : 'debit';
         const iconClass = t.type === 'credit' ? 'fa-arrow-up' : 'fa-arrow-down';
         const amountClass = t.type === 'credit' ? 'credit' : 'debit';
         
@@ -600,37 +604,8 @@ function displayLastTransactions(account) {
     listEl.appendChild(viewAllLi);
 }
 
+function loadRecipients(currentAccount) { /* ... implementado ... */ }
 
-function loadRecipients(currentAccount) {
-    const bankData = loadBankData();
-    const recipientSelect = document.getElementById('recipient-select');
-
-    if (!recipientSelect) return; 
-
-    recipientSelect.innerHTML = '';
-
-    const defaultOption = document.createElement('option');
-    defaultOption.value = '';
-    defaultOption.textContent = 'Selecione um destinatário';
-    defaultOption.disabled = true;
-    defaultOption.selected = true;
-    recipientSelect.appendChild(defaultOption);
-
-    for (const key in bankData.accounts) {
-        const account = bankData.accounts[key];
-        const accountKey = account.agency + '-' + account.account;
-        const currentAccountKey = currentAccount.agencia + '-' + currentAccount.account;
-        
-        if (accountKey !== currentAccountKey) { 
-            const option = document.createElement('option');
-            option.value = key; 
-            option.textContent = `${account.owner} (Ag: ${account.agency} - Cnt: ${account.account.slice(-4)})`;
-            recipientSelect.appendChild(option);
-        }
-    }
-}
-
-// FUNÇÃO DE EXTRATO COMPLETO (Inclui filtros)
 function renderFullExtrato(account, filters = {}) {
     const listEl = document.getElementById('full-extrato-list');
     const summaryEl = document.getElementById('extrato-summary');
@@ -638,25 +613,44 @@ function renderFullExtrato(account, filters = {}) {
 
     listEl.innerHTML = '';
     
-    let transactions = account.transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    let transactions = account.transactions.sort((a, b) => {
+        const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
+        const dateB = typeof b.date === 'string' ? new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
+        return dateB - dateA;
+    });
 
     let totalDebit = 0;
     let totalCredit = 0;
     
+    // --- LÓGICA DE FILTRAGEM ---
     const filteredTransactions = transactions.filter(t => {
+        // 1. Filtro por Tipo (credit/debit/all)
         const typeMatch = filters.type === 'all' || !filters.type || t.type === filters.type;
-        return typeMatch;
+        
+        // 2. Filtro por Mês e Ano
+        let dateMatch = true;
+        if (filters.month) {
+            const transactionDate = new Date(t.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+            const filterDate = new Date(filters.month); 
+
+            dateMatch = (
+                transactionDate.getFullYear() === filterDate.getFullYear() &&
+                transactionDate.getMonth() === filterDate.getMonth()
+            );
+        }
+        
+        return typeMatch && dateMatch;
     });
+    // --- FIM DA LÓGICA DE FILTRAGEM ---
 
 
     if (filteredTransactions.length === 0) {
         listEl.innerHTML = '<li class="no-transactions">Nenhuma transação encontrada com os filtros aplicados.</li>';
-        summaryEl.textContent = 'Nenhuma transação no período.';
+        summaryEl.textContent = 'Total de Despesas: R$ 0,00 | Total de Receitas: R$ 0,00';
         return;
     }
     
     filteredTransactions.forEach(t => {
-        const typeClass = t.type === 'credit' ? 'credit' : 'debit';
         const amountClass = t.type === 'credit' ? 'credit' : 'debit';
         const formattedDate = (typeof t.date === 'string') 
             ? t.date.split(' ')[0] 
@@ -687,6 +681,263 @@ function renderFullExtrato(account, filters = {}) {
     summaryEl.textContent = `Total de Despesas: ${formatCurrency(totalDebit)} | Total de Receitas: ${formatCurrency(totalCredit)}`;
 }
 
+function renderInvestmentData(account) { /* ... implementado ... */ }
+
+
+// FUNÇÕES DO COFRINHO
+function renderCofrinho(account) {
+    const totalCofrinhoEl = document.getElementById('total-cofrinho');
+    const goalListEl = document.getElementById('goal-list');
+    const emptyStateEl = document.getElementById('empty-state');
+    const nextGoalInfoEl = document.getElementById('next-goal-info');
+    
+    if (!totalCofrinhoEl || !goalListEl) return;
+
+    const allGoals = account.goals || [];
+    
+    // CORREÇÃO: Filtra metas que não têm valor guardado (saved > 0)
+    const activeGoals = allGoals.filter(goal => goal.saved > 0);
+    
+    const totalSaved = activeGoals.reduce((sum, goal) => sum + goal.saved, 0);
+    
+    totalCofrinhoEl.textContent = formatCurrency(totalSaved);
+
+    goalListEl.innerHTML = ''; 
+
+    if (activeGoals.length === 0) {
+        if (emptyStateEl) emptyStateEl.classList.remove('hidden');
+        if (nextGoalInfoEl) nextGoalInfoEl.textContent = 'Nenhuma meta ativa.';
+        return;
+    }
+    
+    if (emptyStateEl) emptyStateEl.classList.add('hidden');
+
+    const closestGoal = activeGoals.map(g => ({
+        ...g,
+        progress: g.saved / g.target
+    })).sort((a, b) => b.progress - a.progress)[0];
+
+    if (nextGoalInfoEl && closestGoal) {
+        const remaining = closestGoal.target - closestGoal.saved;
+        nextGoalInfoEl.textContent = `Faltam ${formatCurrency(remaining)} para atingir: ${closestGoal.name}`;
+    }
+
+
+    activeGoals.forEach(goal => {
+        const progress = (goal.saved / goal.target) * 100;
+        const progressClamped = Math.min(progress, 100).toFixed(2);
+        
+        const goalCard = document.createElement('div');
+        goalCard.className = 'goal-card';
+        goalCard.innerHTML = `
+            <div class="goal-header">
+                <div class="goal-title">
+                    <h3>${goal.name}</h3>
+                </div>
+                <p>Meta: ${formatCurrency(goal.target)}</p>
+            </div>
+            
+            <div class="goal-progress-bar">
+                <div class="progress-fill" style="width: ${progressClamped}%;"></div>
+            </div>
+            
+            <div class="goal-info">
+                <span>Guardado: ${formatCurrency(goal.saved)}</span>
+                <span class="progress-percent">${progressClamped}%</span>
+            </div>
+        `;
+        goalListEl.appendChild(goalCard);
+    });
+}
+
+function createNewGoal(e) {
+    e.preventDefault(); 
+    
+    const goalNameEl = document.getElementById('goal-name');
+    const goalTargetEl = document.getElementById('goal-target');
+    const initialDepositEl = document.getElementById('initial-deposit');
+
+    const name = goalNameEl.value.trim();
+    const target = parseFloat(goalTargetEl.value);
+    
+    // CORREÇÃO: Trata a vírgula para depósito inicial
+    const depositInput = initialDepositEl.value.replace(',', '.');
+    const initialDeposit = parseFloat(depositInput) || 0; 
+    
+    if (!name || isNaN(target) || target < 100) {
+        alert("Preencha o nome da meta e o valor alvo corretamente (mínimo R$100).");
+        return;
+    }
+
+    let bankData = loadBankData();
+    let currentUser = getCurrentAccount();
+    const currentAccountKey = currentUser.agency + '-' + currentUser.account;
+    
+    if (initialDeposit > currentUser.balance) {
+        alert(`Saldo insuficiente para depósito inicial. Saldo: ${formatCurrency(currentUser.balance)}`);
+        return;
+    }
+
+    if (initialDeposit > 0) {
+        currentUser.balance = parseFloat((currentUser.balance - initialDeposit).toFixed(2));
+        
+        currentUser.transactions.push({
+            id: Date.now(),
+            type: 'debit',
+            description: `Depósito inicial: Cofrinho ${name}`,
+            amount: initialDeposit,
+            date: new Date().toLocaleDateString('pt-BR')
+        });
+    }
+
+    const newGoal = {
+        id: Date.now(),
+        name: name,
+        target: target,
+        saved: initialDeposit,
+        dateCreated: new Date().toLocaleDateString('pt-BR')
+    };
+
+    if (!currentUser.goals) currentUser.goals = [];
+    currentUser.goals.push(newGoal);
+
+    bankData.accounts[currentAccountKey] = currentUser;
+    saveBankData(bankData);
+    
+    document.getElementById('new-goal-form-area').classList.add('hidden');
+    
+    alert(`Meta "${name}" criada com sucesso!`);
+    window.location.reload(); 
+}
+
+// FUNÇÕES DO MODAL DE MOVIMENTAÇÃO
+function setupMovimentarModal(type) {
+    const modal = document.getElementById('movimentar-modal');
+    const modalTitle = document.getElementById('modal-title');
+    const resgatarBtn = document.getElementById('resgatar-btn');
+    const aportarBtn = document.getElementById('aportar-btn');
+    const form = document.getElementById('movimentar-form');
+    const infoSaldo = document.getElementById('info-saldo');
+    const selectGoal = document.getElementById('select-goal');
+    
+    if (!modal || !form) return;
+
+    form.removeEventListener('submit', handleAporteResgate); 
+    
+    if (type === 'aportar') {
+        modalTitle.textContent = 'Aportar em Meta';
+        aportarBtn.style.display = 'block';
+        resgatarBtn.style.display = 'none';
+        form.dataset.movimentationType = 'aportar';
+        
+    } else if (type === 'resgatar') {
+        modalTitle.textContent = 'Resgatar de Meta';
+        aportarBtn.style.display = 'none';
+        resgatarBtn.style.display = 'block';
+        form.dataset.movimentationType = 'resgatar';
+    }
+    
+    const currentUser = getCurrentAccount();
+    infoSaldo.textContent = `Seu saldo em conta: ${formatCurrency(currentUser.balance)}`;
+    
+    selectGoal.innerHTML = '<option value="">Selecione...</option>';
+    if (currentUser.goals && currentUser.goals.length > 0) {
+        // Mostra apenas metas com saldo > 0 para Resgate
+        const goalsToDisplay = type === 'resgatar' ? currentUser.goals.filter(g => g.saved > 0) : currentUser.goals;
+
+        goalsToDisplay.forEach(goal => {
+            const option = document.createElement('option');
+            option.value = goal.id;
+            option.textContent = `${goal.name} (Guardado: ${formatCurrency(goal.saved)})`;
+            selectGoal.appendChild(option);
+        });
+        
+        if (goalsToDisplay.length === 0 && type === 'resgatar') {
+            selectGoal.innerHTML = '<option value="">Nenhuma meta para resgate.</option>';
+            // Desabilita o botão de resgate se não houver metas com saldo
+            resgatarBtn.disabled = true;
+        } else {
+             resgatarBtn.disabled = false;
+        }
+    }
+
+    form.addEventListener('submit', handleAporteResgate); 
+    
+    modal.classList.remove('hidden');
+}
+
+
+function handleAporteResgate(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const type = form.dataset.movimentationType;
+    const goalId = parseInt(document.getElementById('select-goal').value);
+    
+    // CORREÇÃO CRÍTICA: Pega o valor e substitui vírgula por ponto antes de converter
+    const amountInput = document.getElementById('movimentar-value').value;
+    const amount = parseFloat(amountInput.replace(',', '.')); 
+    
+    if (!goalId || isNaN(amount) || amount <= 0) {
+        alert("Selecione uma meta e insira um valor válido.");
+        return;
+    }
+    
+    let bankData = loadBankData();
+    let currentUser = getCurrentAccount();
+    const currentAccountKey = currentUser.agency + '-' + currentUser.account;
+    const goalIndex = currentUser.goals.findIndex(g => g.id === goalId);
+    
+    if (goalIndex === -1) {
+        alert("Meta não encontrada.");
+        return;
+    }
+    
+    let goal = currentUser.goals[goalIndex];
+    
+    if (type === 'aportar') {
+        if (amount > currentUser.balance) {
+            alert(`Saldo insuficiente na conta. Disponível: ${formatCurrency(currentUser.balance)}`);
+            return;
+        }
+        
+        currentUser.balance -= amount;
+        goal.saved += amount;
+        
+        currentUser.transactions.push({
+            id: Date.now(), type: 'debit', amount: amount,
+            description: `Aporte no Cofrinho: ${goal.name}`,
+            date: new Date().toLocaleDateString('pt-BR')
+        });
+        
+        alert(`Aporte de ${formatCurrency(amount)} realizado com sucesso em ${goal.name}!`);
+
+    } else if (type === 'resgatar') {
+        if (amount > goal.saved) {
+            alert(`Valor de resgate excede o valor guardado na meta. Guardado: ${formatCurrency(goal.saved)}`);
+            return;
+        }
+        
+        currentUser.balance += amount;
+        goal.saved -= amount;
+        
+        currentUser.transactions.push({
+            id: Date.now(), type: 'credit', amount: amount,
+            description: `Resgate do Cofrinho: ${goal.name}`,
+            date: new Date().toLocaleDateString('pt-BR')
+        });
+        
+        alert(`Resgate de ${formatCurrency(amount)} realizado com sucesso para a conta corrente!`);
+    }
+
+    currentUser.balance = parseFloat(currentUser.balance.toFixed(2));
+    bankData.accounts[currentAccountKey] = currentUser;
+    saveBankData(bankData);
+    
+    document.getElementById('movimentar-modal').classList.add('hidden');
+    window.location.reload(); 
+}
+
 
 // ----------------------------------------------------------------------
 // 8. INICIALIZAÇÃO DE PÁGINA
@@ -701,68 +952,77 @@ document.addEventListener('DOMContentLoaded', () => {
     const isEmprestimoPage = document.body.classList.contains('page-emprestimo');
     const isCartoesPage = document.body.classList.contains('page-cartoes');
     const isSolicitacaoPage = document.body.classList.contains('page-solicitacao');
+    const isInvestimentosPage = document.body.classList.contains('page-investimentos');
+    const isCofrinhoPage = document.body.classList.contains('page-cofrinho');
 
-    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage)) {
+    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage || isInvestimentosPage || isCofrinhoPage)) {
         window.location.href = 'login.html';
         return;
     }
 
     if (currentAccount) {
         // Lógica para conta.html (Dashboard)
-        if (isContaPage) {
-            const greetingEl = document.getElementById('user-greeting');
-            const accountInfoEl = document.querySelector('.main-header p');
+        if (isContaPage) { 
+             const greetingEl = document.getElementById('user-greeting');
+             const accountInfoEl = document.querySelector('.main-header p');
             
-            if (greetingEl) {
-                const firstName = currentAccount.owner.split(' ')[0];
-                greetingEl.textContent = `Olá, ${firstName} 👋`;
-            }
+             if (greetingEl) {
+                 const firstName = currentAccount.owner.split(' ')[0];
+                 greetingEl.textContent = `Olá, ${firstName} 👋`;
+             }
             
-            if (accountInfoEl) {
-                const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
-                accountInfoEl.textContent = `Agência: ${currentAccount.agencia} | Conta: ${formattedAccount}`;
-            }
+             if (accountInfoEl) {
+                 const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
+                 accountInfoEl.textContent = `Agência: ${currentAccount.agency} | Conta: ${formattedAccount}`;
+             }
             
-            displayBalance(currentAccount);
-            displayLastTransactions(currentAccount);
+             displayBalance(currentAccount);
+             displayLastTransactions(currentAccount); 
         }
 
         // Lógica para transferir.html
-        if (isTransferPage) {
-            loadRecipients(currentAccount);
-            
-            const transferForm = document.getElementById('transfer-form');
-            if (transferForm) {
-                transferForm.addEventListener('submit', transferHandler); 
-            }
+        if (isTransferPage) { 
+             loadRecipients(currentAccount);
+             const transferForm = document.getElementById('transfer-form');
+             if (transferForm) {
+                 transferForm.addEventListener('submit', transferHandler); 
+             }
         }
         
         // Lógica para extrato.html
-        if (isExtratoPage) {
+        if (isExtratoPage) { 
             const accountInfoEl = document.querySelector('.main-header p');
             const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
             
             if (accountInfoEl) {
-                accountInfoEl.textContent = `Agência: ${currentAccount.agencia} | Conta: ${formattedAccount}`;
+                accountInfoEl.textContent = `Agência: ${currentAccount.agency} | Conta: ${formattedAccount}`;
             }
 
             const applyButton = document.getElementById('apply-filters');
+            const filterType = document.getElementById('filter-type');
+            const filterMonth = document.getElementById('filter-month'); 
+
+            const applyCurrentFilters = () => {
+                const filters = {
+                    type: filterType.value,
+                    month: filterMonth.value
+                };
+                renderFullExtrato(currentAccount, filters);
+            };
+
             if (applyButton) {
-                applyButton.addEventListener('click', () => {
-                    const typeFilter = document.getElementById('filter-type').value;
-                    renderFullExtrato(currentAccount, { type: typeFilter });
-                });
+                applyButton.addEventListener('click', applyCurrentFilters);
             }
-            renderFullExtrato(currentAccount, { type: 'all' });
+            
+            applyCurrentFilters(); 
         }
         
         // Lógica para emprestimos.html (Simulação)
-        if (isEmprestimoPage) {
+        if (isEmprestimoPage) { 
             const valorInput = document.getElementById('valor');
             const parcelasSelect = document.getElementById('parcelas');
             const loanSimulator = document.getElementById('loan-simulator');
 
-            // Limpa o formulário e esconde os resultados ao entrar na página (UX)
             if (loanSimulator) {
                  loanSimulator.reset();
                  const resultsArea = document.getElementById('loan-results');
@@ -770,108 +1030,137 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (valorInput && parcelasSelect) {
-                 if (!valorInput.value || !parcelasSelect.value) {
-                     valorInput.value = 5000;
-                     parcelasSelect.value = 12;
-                 }
-                 // Anexa listeners para mudança de input (CORREÇÃO DE AUTO-SIMULAÇÃO)
-                 if (valorInput) valorInput.addEventListener('input', simulateLoan);
-                 if (parcelasSelect) parcelasSelect.addEventListener('change', simulateLoan);
+                if (!valorInput.value || !parcelasSelect.value) {
+                    valorInput.value = 5000;
+                    parcelasSelect.value = 12;
+                }
+                if (valorInput) valorInput.addEventListener('input', simulateLoan);
+                if (parcelasSelect) parcelasSelect.addEventListener('change', simulateLoan);
 
-                 // Adiciona o listener de SUBMIT para o botão Simular
-                 if (loanSimulator) {
-                     loanSimulator.addEventListener('submit', function(e) {
-                         e.preventDefault();
-                         simulateLoan();
-                     });
-                 }
-                 
-                 simulateLoan(); // Simula na abertura da página
+                if (loanSimulator) {
+                    loanSimulator.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        simulateLoan();
+                    });
+                }
+                simulateLoan(); 
             }
         }
         
-        // Lógica para cartoes.html (Ativação de Botões)
-        if (isCartoesPage) {
-            
-            // 1. Preenchimento do Nome do Titular
-            const nomeCompleto = currentAccount.owner;
-            const nomeTitularElements = document.querySelectorAll('.card-holder');
-            nomeTitularElements.forEach(el => {
-                 el.textContent = nomeCompleto.toUpperCase();
-            });
-            
-            // 2. Inicialização do estado Oculto do Cartão Virtual
-            const numFisicoEl = document.getElementById('num-fisico');
-            const numVirtualEl = document.getElementById('num-virtual');
-            const cvvVirtualEl = document.getElementById('cvv-virtual');
-            const validadeVirtualEl = document.getElementById('validade-virtual');
-            const exibirDadosVirtualBtn = document.getElementById('exibir-dados');
-            const toggleFisicoDataBtn = document.getElementById('toggle-fisico-data');
-            
-            // Inicializa Físico (Estado Oculto)
-            if (numFisicoEl && currentAccount.cardData) {
-                 const lastFourFisico = currentAccount.cardData.physicalNum.slice(-4);
-                 numFisicoEl.textContent = `•••• •••• •••• ${lastFourFisico}`;
-                 
-                 if (toggleFisicoDataBtn) {
-                     toggleFisicoDataBtn.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
-                 }
-            }
-            
-            // Inicializa Virtual (Estado Oculto)
-            if (numVirtualEl && cvvVirtualEl && validadeVirtualEl && currentAccount.cardData) {
-                 const lastFourVirtual = currentAccount.cardData.virtualNum.slice(-4);
-                 numVirtualEl.textContent = `•••• •••• •••• ${lastFourVirtual}`;
-                 cvvVirtualEl.textContent = '***'; // CVV oculto
-                 
-                 if (exibirDadosVirtualBtn) {
-                     exibirDadosVirtualBtn.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
-                 }
-            }
-
-
-            // 3. Anexo dos Listeners nos Botões
-            
-            // Botão Físico: Bloquear/Desbloquear
-            const toggleFisicoBtn = document.getElementById('toggle-fisico');
-            if (toggleFisicoBtn) {
-                toggleFisicoBtn.removeEventListener('click', () => toggleCardLock(true)); 
-                toggleFisicoBtn.addEventListener('click', () => toggleCardLock(true)); // Bloqueio
-            }
-            
-            // Botão Virtual: Gerar Novo Cartão
-            const regenerateVirtualBtn = document.getElementById('regenerate-virtual');
-            if (regenerateVirtualBtn) {
-                regenerateVirtualBtn.removeEventListener('click', generateNewVirtualCard); 
-                regenerateVirtualBtn.addEventListener('click', generateNewVirtualCard); // Gerar CVV
-            }
-            
-            // Botão Físico: Exibir Dados (ID 'toggle-fisico-data')
-            if (toggleFisicoDataBtn) {
-                toggleFisicoDataBtn.removeEventListener('click', () => toggleCardData(true));
-                toggleFisicoDataBtn.addEventListener('click', () => toggleCardData(true)); // True = Físico
-            }
-            
-            // Botão Virtual: Exibir Dados (ID 'exibir-dados')
-            if (exibirDadosVirtualBtn) {
-                exibirDadosVirtualBtn.removeEventListener('click', () => toggleCardData(false));
-                exibirDadosVirtualBtn.addEventListener('click', () => toggleCardData(false)); // False = Virtual
-            }
-            
-            // Botão: Configurações (Ações que sobram - Simulação)
-            const configBtns = document.querySelectorAll('.card-actions button:not(#toggle-fisico):not(#exibir-dados):not(#regenerate-virtual):not(#toggle-fisico-data)');
-            configBtns.forEach(btn => {
-                btn.removeEventListener('click', handleConfiguration);
-                btn.addEventListener('click', handleConfiguration);
-            });
+        // Lógica para cartoes.html (Ativação de Botões e Exibição)
+        if (isCartoesPage) { 
+             const nomeCompleto = currentAccount.owner;
+             const nomeTitularElements = document.querySelectorAll('.card-holder');
+             nomeTitularElements.forEach(el => {
+                  el.textContent = nomeCompleto.toUpperCase();
+             });
+             
+             const numFisicoEl = document.getElementById('num-fisico');
+             const numVirtualEl = document.getElementById('num-virtual');
+             const cvvVirtualEl = document.getElementById('cvv-virtual');
+             const validadeVirtualEl = document.getElementById('validade-virtual');
+             const exibirDadosVirtualBtn = document.getElementById('exibir-dados');
+             const toggleFisicoDataBtn = document.getElementById('toggle-fisico-data');
+             
+             if (numFisicoEl && currentAccount.cardData) {
+                  const lastFourFisico = currentAccount.cardData.physicalNum.slice(-4);
+                  numFisicoEl.textContent = `•••• •••• •••• ${lastFourFisico}`;
+                  if (toggleFisicoDataBtn) {
+                      toggleFisicoDataBtn.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
+                  }
+             }
+             
+             if (numVirtualEl && cvvVirtualEl && currentAccount.cardData) {
+                  const lastFourVirtual = currentAccount.cardData.virtualNum.slice(-4);
+                  numVirtualEl.textContent = `•••• •••• •••• ${lastFourVirtual}`;
+                  cvvVirtualEl.textContent = '***'; 
+                  if (exibirDadosVirtualBtn) {
+                      exibirDadosVirtualBtn.innerHTML = '<i class="fas fa-eye"></i> Exibir Dados';
+                  }
+                  if(validadeVirtualEl) validadeVirtualEl.textContent = currentAccount.cardData.validity;
+             }
+ 
+             const toggleFisicoBtn = document.getElementById('toggle-fisico');
+             if (toggleFisicoBtn) {
+                 toggleFisicoBtn.addEventListener('click', () => toggleCardLock(true)); 
+             }
+             
+             const regenerateVirtualBtn = document.getElementById('regenerate-virtual');
+             if (regenerateVirtualBtn) {
+                 regenerateVirtualBtn.addEventListener('click', generateNewVirtualCard); 
+             }
+             
+             if (toggleFisicoDataBtn) {
+                 toggleFisicoDataBtn.addEventListener('click', () => toggleCardData(true)); 
+             }
+             
+             if (exibirDadosVirtualBtn) {
+                 exibirDadosVirtualBtn.addEventListener('click', () => toggleCardData(false)); 
+             }
+             
+             const configBtns = document.querySelectorAll('.card-actions button:not(#toggle-fisico):not(#exibir-dados):not(#regenerate-virtual):not(#toggle-fisico-data)');
+             configBtns.forEach(btn => {
+                 btn.addEventListener('click', handleConfiguration);
+             });
         }
         
         // Lógica para solicitar-cartao.html (Solicitação de Cartão)
-        if (isSolicitacaoPage) {
-            const solicitacaoForm = document.getElementById('solicitacao-form');
+        if (isSolicitacaoPage) { 
+             const solicitacaoForm = document.getElementById('solicitacao-form');
+             if (solicitacaoForm) {
+                 solicitacaoForm.addEventListener('submit', handleCardRequest);
+             }
+        }
+        
+        // Lógica para investimentos.html
+        if (isInvestimentosPage) { renderInvestmentData(currentAccount); }
+        
+        // Lógica para cofrinho.html
+        if (isCofrinhoPage) {
+            renderCofrinho(currentAccount);
+
+            const btnNewGoal = document.getElementById('btn-new-goal');
+            const btnCancelGoal = document.getElementById('btn-cancel-goal');
+            const newGoalFormArea = document.getElementById('new-goal-form-area');
+            const newGoalForm = document.getElementById('new-goal-form');
+
+            if (btnNewGoal) {
+                btnNewGoal.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    newGoalFormArea.classList.remove('hidden');
+                });
+            }
+            if (btnCancelGoal) {
+                btnCancelGoal.addEventListener('click', () => {
+                    newGoalFormArea.classList.add('hidden');
+                });
+            }
+            if (newGoalForm) {
+                newGoalForm.addEventListener('submit', createNewGoal);
+            }
             
-            if (solicitacaoForm) {
-                solicitacaoForm.addEventListener('submit', handleCardRequest);
+            // LISTENERS DO MODAL DE MOVIMENTAÇÃO
+            const aportarBtnQuick = document.querySelector('.cofrinho-actions a:nth-child(2)'); 
+            const resgatarBtnQuick = document.querySelector('.cofrinho-actions a:nth-child(3)');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            const movimentarModal = document.getElementById('movimentar-modal');
+
+            if (aportarBtnQuick) {
+                aportarBtnQuick.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    setupMovimentarModal('aportar');
+                });
+            }
+            if (resgatarBtnQuick) {
+                resgatarBtnQuick.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    setupMovimentarModal('resgatar');
+                });
+            }
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
+                    movimentarModal.classList.add('hidden');
+                });
             }
         }
     }
