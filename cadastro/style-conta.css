@@ -753,3 +753,103 @@ body {
         grid-template-columns: 1fr;
     }
 }
+/* ---------------------------------------------------------------------- */
+/* --- 13. ESTILIZAÇÃO DA PÁGINA DE PAGAMENTO --- */
+/* ---------------------------------------------------------------------- */
+
+.pagar-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.pagar-option-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 10px;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--cor-secundaria);
+    border-bottom: 3px solid transparent;
+    transition: color 0.2s, border-bottom-color 0.2s;
+}
+
+.toggle-btn.active {
+    color: var(--verde-principal);
+    border-bottom-color: var(--amarelo-principal);
+    font-weight: bold;
+}
+
+/* Área de Detalhes do Boleto */
+.boleto-details-area {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.boleto-details-area h3 {
+    color: var(--verde-principal);
+    margin-bottom: 20px;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Coluna de label e coluna de valor */
+    gap: 10px 20px;
+    margin-bottom: 20px;
+}
+
+.details-grid p {
+    font-weight: 500;
+    color: var(--cor-secundaria);
+    margin: 0;
+}
+
+.details-grid span {
+    font-weight: bold;
+    text-align: right;
+    color: var(--cor-texto);
+    margin: 0;
+}
+
+.details-grid .valor-boleto {
+    color: var(--cor-despesa); /* Vermelho para o valor a pagar */
+    font-size: 1.1em;
+}
+
+.saldo-info {
+    text-align: center;
+    font-weight: bold;
+    color: var(--verde-principal);
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #e6f7e9;
+    border-radius: 6px;
+}
+
+.large-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.2em;
+}
+
+/* Garante que os botões de formulário sigam o padrão */
+#simular-leitura-btn {
+    width: 100%;
+    padding: 12px;
+}

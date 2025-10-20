@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagar Contas | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="page-pagar">
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+                <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+                <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="investimentos.html" class="nav-item"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                <a href="cofrinho.html" class="nav-item"><i class="fas fa-piggy-bank"></i> Cofrinho</a>
+                <a href="login.html" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Pagamento de Contas e Boletos 🧾</h1>
+                <p>Use a câmera ou digite o código de barras para pagar.</p>
+            </header>
+
+            <section class="pagar-card">
+                
+                <div class="pagar-option-toggle">
+                    <button class="toggle-btn active" id="btn-camera"><i class="fas fa-camera"></i> Usar Câmera </button>
+                    <button class="toggle-btn" id="btn-digitar"><i class="fas fa-keyboard"></i> Digitar Código</button>
+                </div>
+
+                <div class="pagar-content" id="pagar-content">
+                    <form id="pagar-form">
+                        
+                        <div class="input-group">
+                            <label for="codigo-barras">Código de Barras ou Linha Digitável</label>
+                            <input type="text" id="codigo-barras" required placeholder="Aponte a câmera para o código...">
+                        </div>
+                        
+                        <button type="button" id="simular-leitura-btn" class="button button-primary">Simular Leitura / Buscar Boleto</button>
+                    </form>
+                </div>
+
+                <div id="boleto-details-area" class="boleto-details-area hidden">
+                    <h3>Detalhes do Pagamento</h3>
+                    
+                    <div class="details-grid">
+                        <p>Beneficiário:</p><span id="detail-beneficiario"></span>
+                        <p>Vencimento:</p><span id="detail-vencimento"></span>
+                        <p>Valor:</p><span id="detail-valor" class="valor-boleto"></span>
+                        <p>Multa/Juros:</p><span id="detail-multa">R$ 0,00</span>
+                    </div>
+
+                    <p class="saldo-info" id="saldo-info">Seu saldo: R$ 4.150,22</p>
+
+                    <button type="button" id="confirmar-pagamento-btn" class="button button-primary large-button">Confirmar Pagamento</button>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="bank-system.js"></script>
+    <script src="app-pagar.js"></script>
+</body>
+</html>

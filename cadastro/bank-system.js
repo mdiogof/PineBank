@@ -954,8 +954,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const isSolicitacaoPage = document.body.classList.contains('page-solicitacao');
     const isInvestimentosPage = document.body.classList.contains('page-investimentos');
     const isCofrinhoPage = document.body.classList.contains('page-cofrinho');
+    const isPagarPage = document.body.classList.contains('page-pagar');
 
-    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage || isInvestimentosPage || isCofrinhoPage)) {
+    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage || isInvestimentosPage || isCofrinhoPage || isDepositarPage || isPagarPage)) {
         window.location.href = 'login.html';
         return;
     }
