@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Investimentos | Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    </head>
+<body class="page-simulador">
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+                <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+                <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="investimentos.html" class="nav-item active"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                <a href="cofrinho.html" class="nav-item"><i class="fas fa-piggy-bank"></i> Cofrinho</a>
+                <a href="login.html" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Simulador de Investimentos 📊</h1>
+                <p>Descubra o potencial de rendimento do seu dinheiro em diferentes produtos.</p>
+            </header>
+
+            <section class="simulator-card">
+                <h2>1. Escolha o Produto</h2>
+                
+                <div class="product-selector-grid" id="product-selector">
+                    <div class="simulador-product-card" data-product="cdb">
+                        <i class="fas fa-certificate"></i>
+                        <h3>CDB / Renda Fixa</h3>
+                    </div>
+                    <div class="simulador-product-card" data-product="tesouro">
+                        <i class="fas fa-shield-alt"></i>
+                        <h3>Tesouro Direto</h3>
+                    </div>
+                    <div class="simulador-product-card" data-product="lci_lca">
+                        <i class="fas fa-home"></i>
+                        <h3>LCI / LCA (Isento IR)</h3>
+                    </div>
+                    <div class="simulador-product-card" data-product="fundos">
+                        <i class="fas fa-chart-pie"></i>
+                        <h3>Fundos Multimercado</h3>
+                    </div>
+                </div>
+
+                <div id="simulation-form-area" class="simulation-form-area hidden">
+                    
+                    <h2 id="simulacao-title">2. Simulação para <span id="product-name">Produto Selecionado</span></h2>
+                    <form id="simulador-form" class="form-container">
+
+                        <div class="input-group">
+                            <label for="valor-inicial">Valor de Aporte (R$)</label>
+                            <input type="number" id="valor-inicial" min="100" step="0.01" placeholder="Ex: 5.000,00" required>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="prazo-meses">Prazo de Investimento (meses)</label>
+                            <input type="number" id="prazo-meses" min="3" max="60" placeholder="Ex: 24 (2 anos)" required>
+                        </div>
+                        
+                        <p class="taxa-info" id="taxa-info">Taxa: 110% CDI (Simulação). Lembre-se: IR incide sobre o lucro.</p>
+
+                        <button type="submit" class="button button-primary large-button">Simular Rendimento</button>
+                    </form>
+                </div>
+
+                <div id="results-area" class="results-area hidden">
+                    <div class="results-summary">
+                        <h3>Resultado Estimado em <span id="res-prazo"></span> meses</h3>
+                        
+                        <div class="result-box total-final">
+                            <span>Valor Bruto Final</span>
+                            <strong id="res-valor-final">R$ 0,00</strong>
+                        </div>
+                        
+                        <div class="result-box total-ganho">
+                            <span>Juros/Rendimento Total</span>
+                            <strong id="res-ganho-bruto">R$ 0,00</strong>
+                        </div>
+
+                        <div class="result-box total-liquido">
+                            <span>Ganho Líquido (Já com IR)</span>
+                            <strong id="res-ganho-liquido" class="destaque-verde">R$ 0,00</strong>
+                        </div>
+
+                        <p class="taxa-final-info" id="taxa-final-info">IR Descontado: R$ 0,00. Seu ganho equivale a X% da poupança.</p>
+                        
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="bank-system.js"></script>
+    <script src="app-simulador.js"></script> </body>
+</html>

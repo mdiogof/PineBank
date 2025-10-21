@@ -754,7 +754,7 @@ body {
     }
 }
 /* ---------------------------------------------------------------------- */
-/* --- 13. ESTILIZAÇÃO DA PÁGINA DE PAGAMENTO --- */
+/* --- 12. ESTILIZAÇÃO DA PÁGINA DE PAGAMENTO --- */
 /* ---------------------------------------------------------------------- */
 
 .pagar-card {
@@ -854,7 +854,7 @@ body {
     padding: 12px;
 }
 /* ---------------------------------------------------------------------- */
-/* --- 14. ESTILIZAÇÃO DA PÁGINA DE CONSULTORIA --- */
+/* --- 13. ESTILIZAÇÃO DA PÁGINA DE CONSULTORIA --- */
 /* ---------------------------------------------------------------------- */
 
 .consultoria-content-grid {
@@ -1020,4 +1020,128 @@ body {
     .agendamento-card {
         order: -1; /* Coloca o agendamento no topo em mobile */
     }
+}
+/* ---------------------------------------------------------------------- */
+/* --- 14. ESTILIZAÇÃO DO SIMULADOR DE INVESTIMENTOS --- */
+/* ---------------------------------------------------------------------- */
+
+.simulator-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.simulator-card h2 {
+    color: var(--verde-principal);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--amarelo-principal);
+    padding-bottom: 5px;
+    font-size: 1.4em;
+}
+
+/* Seleção de Produtos */
+.product-selector-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+    margin-bottom: 40px;
+}
+
+.simulador-product-card {
+    text-align: center;
+    padding: 20px 10px;
+    border: 2px solid var(--cor-borda);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: #fcfcfc;
+}
+
+.simulador-product-card i {
+    font-size: 2em;
+    color: var(--verde-principal);
+    margin-bottom: 5px;
+}
+
+.simulador-product-card h3 {
+    font-size: 0.9em;
+    color: var(--cor-texto);
+    font-weight: 600;
+}
+
+.simulador-product-card:hover {
+    border-color: var(--amarelo-principal);
+    box-shadow: 0 0 8px rgba(255, 215, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.simulador-product-card.selected {
+    border-color: var(--verde-principal);
+    background-color: #e6f7e9;
+    box-shadow: 0 0 10px rgba(56, 142, 60, 0.3);
+}
+
+/* Área de Formulário e Resultados */
+.simulation-form-area {
+    padding-top: 20px;
+    border-top: 1px dashed var(--cor-borda);
+    margin-top: 20px;
+}
+
+#product-name {
+    color: var(--amarelo-principal);
+    font-weight: bold;
+}
+
+.taxa-info {
+    font-size: 0.9em;
+    color: var(--cor-secundaria);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Resultados */
+.results-area {
+    padding: 30px;
+    margin-top: 40px;
+    border-radius: 12px;
+    background-color: var(--cor-fundo-claro);
+    border: 1px solid var(--verde-principal);
+}
+
+.results-summary h3 {
+    font-size: 1.5em;
+    color: var(--verde-principal);
+    margin-bottom: 25px;
+}
+
+.result-box {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px dotted #ccc;
+    font-size: 1em;
+}
+
+.result-box strong {
+    font-weight: bold;
+}
+
+.total-liquido {
+    font-size: 1.3em;
+    border-bottom: none;
+    padding-top: 15px;
+}
+
+.destaque-verde {
+    color: var(--cor-receita); /* Verde de sucesso */
+}
+
+.taxa-final-info {
+    margin-top: 15px;
+    font-size: 0.85em;
+    color: var(--cor-secundaria);
 }
