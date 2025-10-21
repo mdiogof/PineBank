@@ -1145,3 +1145,101 @@ body {
     font-size: 0.85em;
     color: var(--cor-secundaria);
 }
+/* ---------------------------------------------------------------------- */
+/* --- ESTILOS GERAIS DE MODAL (Necessário para as telas invest-aportar/resgatar) --- */
+/* ---------------------------------------------------------------------- */
+
+/* Fundo escuro que cobre toda a tela */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Container branco do Modal */
+.modal-content {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    text-align: left; /* Alinha o texto interno à esquerda */
+}
+
+/* Botão de Fechar (X) */
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: var(--cor-secundaria);
+    text-decoration: none;
+}
+
+/* Ajustes de estilo para o HEADER do Modal */
+.modal-content h2 {
+    color: var(--verde-principal);
+    font-size: 1.8em;
+    margin-bottom: 5px;
+}
+
+.modal-content p {
+    color: var(--cor-secundaria);
+    margin-bottom: 20px;
+    font-size: 0.9em;
+}
+
+/* Estilos dos Botões de Ação Final */
+.large-button {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-top: 15px;
+    transition: background-color 0.2s;
+    border: none;
+}
+
+/* Estilo para o botão Confirmar Resgate (Vermelho - Perigo/Saída) */
+.button-danger {
+    background-color: var(--cor-despesa); /* Vermelho E74C3C */
+    color: white;
+}
+.button-danger:hover {
+    background-color: #c0392b;
+}
+
+/* Estilo para o botão Cancelar (Link Sublinhado) */
+.btn-voltar-simples {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: var(--cor-secundaria); /* Cor cinza/secundária */
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+/* Estilo dos Inputs (para garantir que sejam padronizados) */
+.modal-content select, 
+.modal-content input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-top: 5px;
+    font-size: 1em;
+}

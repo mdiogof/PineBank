@@ -87,13 +87,18 @@ function loadBankData() {
     if (data) {
         let savedData = JSON.parse(data);
         
-        // Garante que o usuário teste tenha a estrutura completa 
+        // Garante que a estrutura exista
         if (!savedData.accounts["0001-123456"].investments) {
              savedData.accounts["0001-123456"].investments = initialBankData.accounts["0001-123456"].investments;
         }
-        if (!savedData.accounts["0001-123456"].goals) {
-             savedData.accounts["0001-123456"].goals = initialBankData.accounts["0001-123456"].goals;
+        
+        // CORREÇÃO: Garante que contas novas também tenham o objeto investments
+        for (const key in savedData.accounts) {
+             if (!savedData.accounts[key].investments) {
+                  savedData.accounts[key].investments = { totalValue: 0, monthlyReturn: 0, products: [] };
+             }
         }
+        
         saveBankData(savedData);
         return savedData;
     } else {
@@ -557,17 +562,27 @@ function displayBalance(account) {
     }
 }
 
+// ... (Dentro da Seção 7)
+
 function displayLastTransactions(account) {
     const listEl = document.getElementById('last-transactions-list');
     if (!listEl) return;
 
     listEl.innerHTML = ''; 
 
+    // CORREÇÃO CRÍTICA: Ordenação mais robusta e extrai apenas as 3 mais recentes
     const transactions = account.transactions.sort((a, b) => {
-        const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
-        const dateB = typeof b.date === 'string' ? new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
-        return dateB - dateA;
-    }).slice(0, 3); 
+        // Converte as strings de data/hora (21/10/2025 10:00) para um objeto Date
+        const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+        const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
+        
+        // Se a data for igual (sem a hora), usa o ID (timestamp) para a ordem
+        if (dateA.getTime() === dateB.getTime() && a.id && b.id) {
+             return b.id - a.id; // Ordem decrescente por ID
+        }
+
+        return dateB - dateA; // Ordem decrescente por data
+    }).slice(0, 3); // Limita às 3 últimas transações
 
     if (transactions.length === 0) {
         listEl.innerHTML = '<li class="no-transactions">Nenhuma transação recente.</li>';
@@ -576,10 +591,10 @@ function displayLastTransactions(account) {
 
     transactions.forEach(t => {
         const li = document.createElement('li');
-        const typeClass = t.type === 'credit' ? 'credit' : 'debit';
         const iconClass = t.type === 'credit' ? 'fa-arrow-up' : 'fa-arrow-down';
         const amountClass = t.type === 'credit' ? 'credit' : 'debit';
         
+        // Pega a data e formata para exibir (só a parte da data)
         const formattedDate = (typeof t.date === 'string') 
             ? t.date.split(' ')[0] 
             : new Date(t.date).toLocaleDateString('pt-BR');
@@ -1029,6 +1044,136 @@ function initializeConsultoria(account) {
         });
     }
 }
+// ... (Dentro da Seção 7)
+
+// FUNÇÃO CRÍTICA PARA MOVIMENTAR O SALDO DE INVESTIMENTO
+// ... (Dentro da Seção 7)
+
+// FUNÇÃO CRÍTICA PARA MOVIMENTAR O SALDO DE INVESTIMENTO
+function handleInvestmentMovement(type, amount, selectedProductType) { 
+    if (isNaN(amount) || amount <= 0) return alert("Valor inválido.");
+
+    const productType = selectedProductType.toLowerCase(); 
+
+    let bankData = loadBankData();
+    let currentUser = getCurrentAccount();
+    const currentAccountKey = currentUser.agency + '-' + currentUser.account;
+
+    // 1. Garante que a estrutura de investimentos exista
+    if (!currentUser.investments) {
+        currentUser.investments = { totalValue: 0, monthlyReturn: 0, products: [] };
+    }
+    
+    // 2. Localiza o Produto Específico
+    let product = currentUser.investments.products.find(p => p.type === productType);
+    let productIndex = currentUser.investments.products.findIndex(p => p.type === productType);
+    
+    let productValue = product ? product.value : 0; 
+
+    // --- Validações ---
+    if (type === 'debit' && currentUser.balance < amount) {
+        alert(`Saldo insuficiente na conta corrente. Disponível: ${formatCurrency(currentUser.balance)}`);
+        return false;
+    }
+    if (type === 'credit' && productValue < amount) {
+        alert(`Não é possível resgatar ${formatCurrency(amount)}. Valor investido neste produto: ${formatCurrency(productValue)}.`);
+        return false;
+    }
+    // -------------------
+
+    const transactionType = type === 'debit' ? 'debit' : 'credit';
+    const description = type === 'debit' ? `Aporte em ${selectedProductType}` : `Resgate de ${selectedProductType}`;
+    
+    // 3. ATUALIZAÇÃO DOS SALDOS (Débito)
+    if (type === 'debit') {
+        currentUser.balance -= amount;
+        
+        if (product) { 
+            product.value += amount; 
+        } else { 
+            // Adiciona o produto à array se for um aporte em um produto novo 
+            currentUser.investments.products.push({
+                name: selectedProductType, 
+                type: productType,
+                value: amount,
+                rate: 0.0
+            });
+            // O productIndex e o product original não serão mais usados neste loop.
+        }
+
+    } else { // 4. ATUALIZAÇÃO DOS SALDOS (Resgate - Crédito)
+        currentUser.balance += amount;
+        
+        if (product) { 
+            product.value -= amount; 
+        }
+    }
+
+    // 5. RECONSTRUÇÃO DA ARRAY E RE-CÁLCULO DO TOTAL INVESTIDO
+    
+    // Filtra a array para remover produtos que zeraram (ou ficaram negativos)
+    currentUser.investments.products = currentUser.investments.products.filter(p => p.value > 0);
+    
+    // Garante que o produto recém-alterado (se não zerado) esteja na array
+    // Se o produto foi retirado no filtro, não o readiciona.
+    if (type === 'debit' && !product && productType) {
+        // Lógica de adicionar novo produto já foi feita no passo 3.
+        // A array products já está correta.
+    } else if (type === 'credit' && product && product.value > 0) {
+         // Se houve resgate mas o saldo ainda é positivo, atualiza a array
+         currentUser.investments.products[productIndex] = product;
+    }
+
+
+    // Re-calcula o Total Investido (totalValue) somando apenas os saldos restantes na array
+    const newTotalInvested = currentUser.investments.products.reduce((sum, p) => sum + p.value, 0);
+    currentUser.investments.totalValue = newTotalInvested;
+    
+    // 6. Finaliza e Salva
+    currentUser.balance = parseFloat(currentUser.balance.toFixed(2));
+    currentUser.investments.totalValue = parseFloat(currentUser.investments.totalValue.toFixed(2));
+    
+    // Adiciona ao extrato
+    currentUser.transactions.push({
+        id: Date.now(),
+        type: transactionType,
+        description: description,
+        amount: amount,
+        date: new Date().toLocaleDateString('pt-BR')
+    });
+
+    bankData.accounts[currentAccountKey] = currentUser;
+    saveBankData(bankData);
+    
+    return true;
+}
+// ... (Adicionado esta função na Seção 7 do bank-system.js)
+
+function renderInvestmentDashboard(account) {
+    const totalInvestidoEl = document.getElementById('total-investido');
+    const rentabilidadeEl = document.getElementById('rentabilidade-mes');
+
+    if (!totalInvestidoEl || !account.investments) {
+        // Fallback se a conta não tiver o objeto 'investments' ou se os elementos não existirem
+        if (totalInvestidoEl) totalInvestidoEl.textContent = formatCurrency(0);
+        if (rentabilidadeEl) rentabilidadeEl.textContent = `+ R$ 0,00 (0.00%)`;
+        return;
+    }
+
+    const invest = account.investments;
+    const totalSimulado = invest.totalValue;
+    const ganhoSimulado = invest.monthlyReturn;
+    
+    // Cálculo do % de rentabilidade
+    const investBase = totalSimulado - ganhoSimulado;
+    const percentualSimulado = ((ganhoSimulado / investBase) * 100).toFixed(2);
+
+    // 1. Atualiza o Card Principal
+    totalInvestidoEl.textContent = formatCurrency(totalSimulado);
+    rentabilidadeEl.textContent = `+ ${formatCurrency(ganhoSimulado)} (${percentualSimulado}%)`;
+    
+    // (Atenção: A lógica para atualizar a lista de produtos deve ser chamada aqui também, se necessário)
+}
 
 
 // ----------------------------------------------------------------------
@@ -1209,7 +1354,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Lógica para investimentos.html
-        if (isInvestimentosPage) { renderInvestmentData(currentAccount); }
+        if (isInvestimentosPage) { renderInvestmentData(currentAccount); 
+            renderInvestmentDashboard(currentAccount);
+        }
         
         // Lógica para cofrinho.html
         if (isCofrinhoPage) {

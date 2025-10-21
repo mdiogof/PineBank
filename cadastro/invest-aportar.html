@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aportar Investimento | Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="modal-overlay" style="display: flex;"> <div class="modal-content" style="max-width: 450px;">
+            <a href="investimentos.html" class="modal-close">&times;</a>
+            
+            <h2 style="color: var(--verde-principal);">Realizar Aporte</h2>
+            <p style="color: var(--cor-secundaria);">Transfira da sua conta corrente para seus investimentos.</p>
+            
+            <form onsubmit="
+                const amount = parseFloat(document.getElementById('valor-aporte').value.replace(',', '.'));
+                const productType = document.getElementById('investimento-destino').value.toLowerCase();
+                
+                if(handleInvestmentMovement('debit', amount, productType)) { 
+                    alert('Aporte de ' + formatCurrency(amount) + ' concluído com sucesso! Seu saldo foi atualizado.');
+                    window.location.href='investimentos.html';
+                }
+                return false; /* Impede o envio tradicional do formulário */
+            ">
+                
+                <div class="input-group">
+                    <label for="investimento-destino">Investimento de Destino</label>
+                    <select id="investimento-destino" required>
+                        </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="valor-aporte">Valor do Aporte (R$)</label>
+                    <input type="number" id="valor-aporte" min="1" step="0.01" placeholder="Ex: 500,00" required>
+                </div>
+                
+                <p style="color: var(--cor-secundaria); font-size: 0.85em; text-align: center;">O valor será debitado da sua Conta Corrente.</p>
+
+                <button type="submit" class="button button-primary large-button" style="margin-top: 10px;">
+                    Confirmar Aporte
+                </button>
+
+                <a href="investimentos.html" class="btn-voltar-simples" style="display: block; text-align: center; margin-top: 15px;">Cancelar</a>
+            </form>
+        </div>
+    </div>
+    <script src="bank-system.js"></script>
+    <script src="app-invest-modal.js"></script>
+</body>
+</html>

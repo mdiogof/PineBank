@@ -32,22 +32,22 @@
             </header>
             
             <section class="invest-summary">
-                <div class="summary-left">
-                    <h2>Total Investido</h2>
-                    <span class="invest-value" id="total-investido">R$ 10.000,00</span>
-                </div>
-                <div class="rentabilidade">
-                    <p>Rentabilidade no Mês</p>
-                    <span class="ganho" id="rentabilidade-mes">+ R$ 82,50 (0,82%)</span>
-                </div>
-            </section>
+    <div class="summary-left">
+        <h2>Total Investido</h2>
+        <span class="invest-value" id="total-investido">R$ 10.000,00</span>
+    </div>
+    <div class="rentabilidade">
+        <h2>Rentabilidade no Mês</h2>
+        <span class="ganho" id="rentabilidade-mes">+ R$ 82,50 (0,82%)</span>
+    </div>
+</section>
 
             <section class="quick-actions">
-                <a href="#" class="action-item">
+                <a href="invest-aportar.html" class="action-item">
                     <i class="fas fa-dollar-sign"></i>
                     <span>Aportar</span>
                 </a>
-                <a href="#" class="action-item">
+                <a href="invest-resgatar.html" class="action-item">
                     <i class="fas fa-file-export"></i>
                     <span>Resgatar</span>
                 </a>
@@ -106,6 +106,16 @@
         </main>
     </div>
 
-    <script src="bank-system.js"></script> 
+    <script src="bank-system.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentAccount = getCurrentAccount();
+            if (currentAccount) {
+                 // CHAMADA CRÍTICA: Chama a função que lê e preenche o card principal.
+                 renderInvestmentDashboard(currentAccount); 
+                 // O restante da sua lógica de investimentos deve ser chamada aqui se necessário.
+            }
+        });
+    </script>
 </body>
 </html>
