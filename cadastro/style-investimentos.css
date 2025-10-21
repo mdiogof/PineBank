@@ -1,0 +1,119 @@
+/* ------------------------------------------------ */
+/* ESTILOS DE PÁGINA DE DETALHE DE PRODUTO ISOLADO */
+/* ------------------------------------------------ */
+
+/* NOTA: Este arquivo CSS depende que as variáveis de cor (var(--verde-principal), etc.) 
+   já estejam definidas no seu arquivo style-marketing.css principal. */
+
+.product-detail-wrapper {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.detail-header-product {
+    margin-bottom: 40px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--cor-borda);
+    position: relative;
+}
+
+.detail-header-product h1 {
+    color: var(--verde-principal);
+    font-size: 2.5em;
+    margin-bottom: 5px;
+}
+
+.detail-header-product .subtitle {
+    font-size: 1.1em;
+    color: var(--cor-secundaria);
+    font-style: italic;
+}
+
+.detail-product-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.detail-product-card p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+    font-size: 1em;
+}
+
+/* GRID DE BENEFÍCIOS */
+.benefit-grid-product {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.benefit-box-product {
+    background-color: var(--cor-fundo-claro);
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid var(--amarelo-principal);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.benefit-box-product i {
+    color: var(--verde-principal); /* Ícones coloridos */
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.benefit-box-product h3 {
+    color: var(--cor-texto);
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+/* SEÇÃO DE CONTEÚDO EXTRA */
+.content-section-product {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px dashed var(--cor-borda);
+}
+
+.content-section-product h2 {
+    color: var(--amarelo-principal); /* Título de seção secundária em amarelo */
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    border-bottom: none; 
+}
+.content-section-product p {
+    line-height: 1.6;
+}
+
+/* BOTÃO DE VOLTAR (Para Investimentos) */
+.btn-voltar-simples {
+    display: inline-block;
+    background-color: #f0f0f0;
+    color: var(--cor-texto);
+    padding: 8px 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    transition: background-color 0.2s;
+    font-weight: 600;
+}
+.btn-voltar-simples:hover {
+    background-color: #e0e0e0;
+}
+
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+    .product-detail-wrapper {
+        padding: 0 15px;
+    }
+    .benefit-grid-product {
+        grid-template-columns: 1fr;
+    }
+    .detail-header-product h1 {
+        font-size: 2em;
+    }
+}
