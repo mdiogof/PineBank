@@ -1044,10 +1044,7 @@ function initializeConsultoria(account) {
         });
     }
 }
-// ... (Dentro da Seção 7)
 
-// FUNÇÃO CRÍTICA PARA MOVIMENTAR O SALDO DE INVESTIMENTO
-// ... (Dentro da Seção 7)
 
 // FUNÇÃO CRÍTICA PARA MOVIMENTAR O SALDO DE INVESTIMENTO
 function handleInvestmentMovement(type, amount, selectedProductType) { 
@@ -1108,9 +1105,6 @@ function handleInvestmentMovement(type, amount, selectedProductType) {
             product.value -= amount; 
         }
     }
-
-    // 5. RECONSTRUÇÃO DA ARRAY E RE-CÁLCULO DO TOTAL INVESTIDO
-    
     // Filtra a array para remover produtos que zeraram (ou ficaram negativos)
     currentUser.investments.products = currentUser.investments.products.filter(p => p.value > 0);
     
@@ -1154,25 +1148,33 @@ function renderInvestmentDashboard(account) {
     const rentabilidadeEl = document.getElementById('rentabilidade-mes');
 
     if (!totalInvestidoEl || !account.investments) {
-        // Fallback se a conta não tiver o objeto 'investments' ou se os elementos não existirem
+        // Fallback para novos usuários
         if (totalInvestidoEl) totalInvestidoEl.textContent = formatCurrency(0);
         if (rentabilidadeEl) rentabilidadeEl.textContent = `+ R$ 0,00 (0.00%)`;
         return;
     }
 
     const invest = account.investments;
-    const totalSimulado = invest.totalValue;
-    const ganhoSimulado = invest.monthlyReturn;
     
+    // CRÍTICO: 1. RECALCULA O TOTAL INVESTIDO PELA SOMA DOS PRODUTOS REAIS
+    const actualTotalInvested = invest.products.reduce((sum, p) => sum + p.value, 0);
+
+    const totalSimulado = actualTotalInvested; 
+    
+    // 2. RECÁLCULO PROPORCIONAL DO GANHO SIMULADO
+    const initialTotalForGain = 12540.00; // Valor fixo original do initialBankData
+    const initialGain = 112.86;
+    
+    // Proporcionalidade: (Ganho_Inicial / Total_Inicial) * Total_Atual
+    const ganhoSimulado = (initialGain / initialTotalForGain) * actualTotalInvested;
+
     // Cálculo do % de rentabilidade
-    const investBase = totalSimulado - ganhoSimulado;
+    const investBase = totalSimulado > 0 ? (totalSimulado - ganhoSimulado) : 1; // Evita divisão por zero
     const percentualSimulado = ((ganhoSimulado / investBase) * 100).toFixed(2);
 
-    // 1. Atualiza o Card Principal
+    // 3. Atualiza o Card Principal
     totalInvestidoEl.textContent = formatCurrency(totalSimulado);
     rentabilidadeEl.textContent = `+ ${formatCurrency(ganhoSimulado)} (${percentualSimulado}%)`;
-    
-    // (Atenção: A lógica para atualizar a lista de produtos deve ser chamada aqui também, se necessário)
 }
 
 
