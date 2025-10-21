@@ -392,3 +392,38 @@ footer p {
     left: auto; 
   }
 }
+.marketing-top-nav {
+    background-color: var(--amarelo-principal); /* Fundo amarelo */
+    color: var(--cor-texto);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.marketing-top-nav .logo-text-link {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--verde-principal);
+    text-decoration: none;
+}
+.marketing-top-nav .nav-links a,
+.marketing-top-nav .nav-links .btn-abrir-conta-nav {
+    margin-left: 15px;
+    text-decoration: none;
+    color: var(--cor-texto);
+    font-size: 0.9em;
+}
+
+.marketing-top-nav .nav-links .btn-abrir-conta-nav {
+    background-color: var(--verde-principal);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.marketing-top-nav .nav-links .btn-abrir-conta-nav:hover {
+    background-color: #2e7d32;
+}
