@@ -604,8 +604,34 @@ function displayLastTransactions(account) {
     listEl.appendChild(viewAllLi);
 }
 
-function loadRecipients(currentAccount) { /* ... implementado ... */ }
+function loadRecipients(currentAccount) {
+    const bankData = loadBankData();
+    const recipientSelect = document.getElementById('recipient-select');
 
+    if (!recipientSelect) return; 
+
+    recipientSelect.innerHTML = '';
+
+    const defaultOption = document.createElement('option');
+    defaultOption.value = '';
+    defaultOption.textContent = 'Selecione um destinatário';
+    defaultOption.disabled = true;
+    defaultOption.selected = true;
+    recipientSelect.appendChild(defaultOption);
+
+    for (const key in bankData.accounts) {
+        const account = bankData.accounts[key];
+        const accountKey = account.agency + '-' + account.account;
+        const currentAccountKey = currentAccount.agencia + '-' + currentAccount.account;
+        
+        if (accountKey !== currentAccountKey) { 
+            const option = document.createElement('option');
+            option.value = key; 
+            option.textContent = `${account.owner} (Ag: ${account.agency} - Cnt: ${account.account.slice(-4)})`;
+            recipientSelect.appendChild(option);
+        }
+    }
+}
 function renderFullExtrato(account, filters = {}) {
     const listEl = document.getElementById('full-extrato-list');
     const summaryEl = document.getElementById('extrato-summary');
@@ -982,12 +1008,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Lógica para transferir.html
+        // Lógica para transferir.html
         if (isTransferPage) { 
-             loadRecipients(currentAccount);
+             loadRecipients(currentAccount); // Chamada para preencher a lista
              const transferForm = document.getElementById('transfer-form');
              if (transferForm) {
                  transferForm.addEventListener('submit', transferHandler); 
              }
+        }
         }
         
         // Lógica para extrato.html
@@ -1165,4 +1193,4 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-});
+);
