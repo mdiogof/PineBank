@@ -853,3 +853,171 @@ body {
     width: 100%;
     padding: 12px;
 }
+/* ---------------------------------------------------------------------- */
+/* --- 14. ESTILIZAÇÃO DA PÁGINA DE CONSULTORIA --- */
+/* ---------------------------------------------------------------------- */
+
+.consultoria-content-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* Chat maior que Agendamento */
+    gap: 30px;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.chat-bot-card, .agendamento-card {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.chat-bot-card h2, .agendamento-card h2 {
+    color: var(--verde-principal);
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--amarelo-principal);
+    padding-bottom: 5px;
+    font-size: 1.3em;
+}
+
+/* Estilos da Janela de Chat */
+.chat-window {
+    height: 350px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 8px;
+    padding: 15px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    background-color: var(--cor-fundo-claro);
+}
+
+.message {
+    display: flex;
+    margin-bottom: 15px;
+    max-width: 85%;
+}
+
+.message.bot {
+    justify-content: flex-start;
+}
+.message.user {
+    justify-content: flex-end;
+    margin-left: auto;
+}
+
+.message p {
+    padding: 10px 15px;
+    border-radius: 15px;
+    font-size: 0.95em;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.message.bot p {
+    background-color: #e6f7e9; /* Fundo Verde Suave */
+    color: var(--verde-principal);
+    border-bottom-left-radius: 0;
+}
+
+.message.user p {
+    background-color: var(--amarelo-principal); /* Fundo Amarelo Pineapple */
+    color: var(--cor-texto);
+    border-bottom-right-radius: 0;
+}
+
+.avatar {
+    font-size: 1.2em;
+    margin-right: 8px;
+}
+.message.user .avatar {
+    order: 2;
+    margin-left: 8px;
+    margin-right: 0;
+}
+
+/* Opções Rápidas do Chat */
+.quick-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+.chat-option-btn {
+    background-color: #fff;
+    border: 1px solid var(--amarelo-principal);
+    color: var(--cor-texto);
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.chat-option-btn:hover {
+    background-color: var(--amarelo-principal);
+    color: #333;
+}
+
+/* Área de Input do Chat */
+.chat-input-area {
+    display: flex;
+}
+#user-input {
+    flex-grow: 1;
+    padding: 10px 15px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 20px 0 0 20px;
+    font-size: 1em;
+}
+.send-btn {
+    background-color: var(--verde-principal);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 0 20px 20px 0;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.send-btn:hover {
+    background-color: #2e7d32;
+}
+
+/* Estilos de Agendamento */
+.agendamento-info {
+    color: var(--cor-secundaria);
+    margin-bottom: 25px;
+    font-size: 0.95em;
+}
+
+.confirmacao-agendamento {
+    margin-top: 25px;
+    padding: 15px;
+    background-color: #e6f7e9;
+    border: 1px solid var(--cor-receita);
+    border-radius: 8px;
+    text-align: center;
+}
+.confirmacao-agendamento i {
+    color: var(--cor-receita);
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+.confirmacao-agendamento p {
+    font-weight: bold;
+    color: var(--verde-principal);
+    margin: 5px 0;
+}
+.small-text {
+    font-weight: normal;
+    font-size: 0.8em;
+    color: var(--cor-secundaria);
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+    .consultoria-content-grid {
+        grid-template-columns: 1fr; /* Coloca um card abaixo do outro em telas menores */
+    }
+    .agendamento-card {
+        order: -1; /* Coloca o agendamento no topo em mobile */
+    }
+}

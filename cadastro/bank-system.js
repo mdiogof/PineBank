@@ -117,7 +117,7 @@ function getCurrentAccount() {
                  owner: loggedUser.nome,
                  agency: agencia,
                  account: conta,
-                 balance: 0.00, 
+                 balance: 0.00, // Saldo inicial zero para novos cadastros
                  loanLimit: 5000.00, 
                  cardData: initialBankData.accounts["0001-123456"].cardData,
                  investments: null,
@@ -343,6 +343,7 @@ function transferHandler(e) {
 
     const recipientAccount = allAccounts[recipientAccKey];
     
+    // Realiza o Débito e Crédito (Simulação)
     currentUser.balance = parseFloat((currentUser.balance - amount).toFixed(2));
     recipientAccount.balance = parseFloat((recipientAccount.balance + amount).toFixed(2));
 
@@ -385,7 +386,7 @@ window.transferHandler = transferHandler;
 const LOAN_CONFIG = {
     INTEREST_RATE: 0.015, // 1.5% ao mês
     IOF_DAILY_RATE: 0.000082, 
-    IOF_FIXED_RATE: 0.0038,   
+    IOF_FIXED_RATE: 0.0038,   
 };
 
 const calculatePMT = (rateMonthly, periods, presentValue) => {
@@ -415,6 +416,7 @@ function simulateLoan() {
     }
     
     if (V > limit) {
+        alert(`O valor solicitado (${formatCurrency(V)}) excede seu limite pré-aprovado de ${formatCurrency(limit)}.`);
         if (V > limit) valorEl.value = limit; 
         resultsArea.classList.add('hidden');
         return;
@@ -489,9 +491,6 @@ function contractLoan(e) {
     
     currentUser.balance += valorContratado;
     currentUser.balance = parseFloat(currentUser.balance.toFixed(2)); 
-    
-    currentUser.loanLimit = parseFloat((currentUser.loanLimit - valorContratado).toFixed(2));
-    if (currentUser.loanLimit < 0) currentUser.loanLimit = 0; 
 
     currentUser.transactions.push({
         id: Date.now(),
@@ -527,7 +526,7 @@ function contractLoan(e) {
 
 
 // ----------------------------------------------------------------------
-// 7. FUNÇÕES DE RENDERIZAÇÃO E UTILS
+// 7. FUNÇÕES DE RENDERIZAÇÃO
 // ----------------------------------------------------------------------
 
 function formatCurrency(amount) {
@@ -537,7 +536,7 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-function displayBalance(account) { 
+function displayBalance(account) {
     const balanceEl = document.getElementById('current-balance');
     const toggleButton = document.getElementById('toggle-balance');
 
@@ -577,6 +576,7 @@ function displayLastTransactions(account) {
 
     transactions.forEach(t => {
         const li = document.createElement('li');
+        const typeClass = t.type === 'credit' ? 'credit' : 'debit';
         const iconClass = t.type === 'credit' ? 'fa-arrow-up' : 'fa-arrow-down';
         const amountClass = t.type === 'credit' ? 'credit' : 'debit';
         
@@ -604,12 +604,14 @@ function displayLastTransactions(account) {
     listEl.appendChild(viewAllLi);
 }
 
+
 function loadRecipients(currentAccount) {
     const bankData = loadBankData();
     const recipientSelect = document.getElementById('recipient-select');
 
     if (!recipientSelect) return; 
 
+    // CORREÇÃO CRÍTICA APLICADA: Garante que o select seja limpo para remover o "Carregando destinatários..."
     recipientSelect.innerHTML = '';
 
     const defaultOption = document.createElement('option');
@@ -632,6 +634,7 @@ function loadRecipients(currentAccount) {
         }
     }
 }
+
 function renderFullExtrato(account, filters = {}) {
     const listEl = document.getElementById('full-extrato-list');
     const summaryEl = document.getElementById('extrato-summary');
@@ -640,7 +643,7 @@ function renderFullExtrato(account, filters = {}) {
     listEl.innerHTML = '';
     
     let transactions = account.transactions.sort((a, b) => {
-        const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
+        const dateA = typeof a.date === 'string' ? new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(a.date);
         const dateB = typeof b.date === 'string' ? new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1')) : new Date(b.date);
         return dateB - dateA;
     });
@@ -648,31 +651,15 @@ function renderFullExtrato(account, filters = {}) {
     let totalDebit = 0;
     let totalCredit = 0;
     
-    // --- LÓGICA DE FILTRAGEM ---
     const filteredTransactions = transactions.filter(t => {
-        // 1. Filtro por Tipo (credit/debit/all)
         const typeMatch = filters.type === 'all' || !filters.type || t.type === filters.type;
-        
-        // 2. Filtro por Mês e Ano
-        let dateMatch = true;
-        if (filters.month) {
-            const transactionDate = new Date(t.date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$3-$2-$1'));
-            const filterDate = new Date(filters.month); 
-
-            dateMatch = (
-                transactionDate.getFullYear() === filterDate.getFullYear() &&
-                transactionDate.getMonth() === filterDate.getMonth()
-            );
-        }
-        
-        return typeMatch && dateMatch;
+        return typeMatch;
     });
-    // --- FIM DA LÓGICA DE FILTRAGEM ---
 
 
     if (filteredTransactions.length === 0) {
         listEl.innerHTML = '<li class="no-transactions">Nenhuma transação encontrada com os filtros aplicados.</li>';
-        summaryEl.textContent = 'Total de Despesas: R$ 0,00 | Total de Receitas: R$ 0,00';
+        summaryEl.textContent = 'Nenhuma transação no período.';
         return;
     }
     
@@ -711,7 +698,7 @@ function renderInvestmentData(account) { /* ... implementado ... */ }
 
 
 // FUNÇÕES DO COFRINHO
-function renderCofrinho(account) {
+function renderCofrinho(account) { 
     const totalCofrinhoEl = document.getElementById('total-cofrinho');
     const goalListEl = document.getElementById('goal-list');
     const emptyStateEl = document.getElementById('empty-state');
@@ -721,7 +708,7 @@ function renderCofrinho(account) {
 
     const allGoals = account.goals || [];
     
-    // CORREÇÃO: Filtra metas que não têm valor guardado (saved > 0)
+    // Filtra metas que não têm valor guardado (saved > 0)
     const activeGoals = allGoals.filter(goal => goal.saved > 0);
     
     const totalSaved = activeGoals.reduce((sum, goal) => sum + goal.saved, 0);
@@ -836,7 +823,6 @@ function createNewGoal(e) {
     window.location.reload(); 
 }
 
-// FUNÇÕES DO MODAL DE MOVIMENTAÇÃO
 function setupMovimentarModal(type) {
     const modal = document.getElementById('movimentar-modal');
     const modalTitle = document.getElementById('modal-title');
@@ -880,7 +866,6 @@ function setupMovimentarModal(type) {
         
         if (goalsToDisplay.length === 0 && type === 'resgatar') {
             selectGoal.innerHTML = '<option value="">Nenhuma meta para resgate.</option>';
-            // Desabilita o botão de resgate se não houver metas com saldo
             resgatarBtn.disabled = true;
         } else {
              resgatarBtn.disabled = false;
@@ -964,6 +949,87 @@ function handleAporteResgate(e) {
     window.location.reload(); 
 }
 
+/// FUNÇÕES DE LÓGICA DE CONSULTORIA
+function initializeConsultoria(account) {
+    const chatWindow = document.getElementById('chat-window');
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const quickOptions = document.getElementById('quick-options');
+    const agendamentoForm = document.getElementById('agendamento-form');
+    const confirmacaoArea = document.getElementById('confirmacao-agendamento');
+    const dataAgendadaEl = document.getElementById('data-agendada');
+    
+    // --- 1. LÓGICA DO CHAT BOT SIMULADO ---
+    const addMessage = (text, type) => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${type}`;
+        messageDiv.innerHTML = `<span class="avatar">${type === 'bot' ? '🍍' : '👤'}</span><p>${text}</p>`;
+        chatWindow.appendChild(messageDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll para o final
+    };
+
+    const handleChatSubmit = (e) => {
+        e.preventDefault(); // IMPEDE O SUBMIT DO FORMULÁRIO
+        const query = userInput.value.trim();
+        if (!query) return;
+
+        addMessage(query, 'user');
+        userInput.value = '';
+
+        // Simulação de resposta da IA
+        setTimeout(() => {
+            let response = `Desculpe, minha base de dados está em atualização. Para essa dúvida sobre "${query}", por favor, agende uma consulta com nosso especialista.`;
+            
+            if (query.toLowerCase().includes('cdb')) {
+                response = 'O CDB (Certificado de Depósito Bancário) é um investimento de renda fixa. Os melhores CDBs rendem acima de 100% do CDI e são garantidos pelo FGC (Fundo Garantidor de Créditos) até R$ 250 mil.';
+            } else if (query.toLowerCase().includes('tesouro')) {
+                response = 'O Tesouro Selic é um título público federal de baixíssimo risco, atrelado à taxa Selic. É ideal para a sua reserva de emergência e pode ser resgatado a qualquer momento.';
+            } else if (query.toLowerCase().includes('resgate')) {
+                 response = 'Em geral, fundos de liquidez diária e o Tesouro Selic permitem resgate no mesmo dia (D+0) ou no dia seguinte (D+1). Já o CDB pode ter carência.';
+            }
+            
+            addMessage(response, 'bot');
+        }, 1000);
+    };
+
+    // 2. LISTENERS DE CHAT
+    if (chatForm) chatForm.addEventListener('submit', handleChatSubmit);
+    
+    // LISTENERS DAS OPÇÕES RÁPIDAS (Corrigido para usar addEventListener)
+    if (quickOptions) {
+        quickOptions.querySelectorAll('.chat-option-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                userInput.value = btn.dataset.query;
+                chatForm.dispatchEvent(new Event('submit', { bubbles: true })); // Simula o envio
+            });
+        });
+    }
+
+    // --- 3. AGENDAMENTO SIMULADO ---
+    if (agendamentoForm) {
+        agendamentoForm.addEventListener('submit', (e) => {
+            e.preventDefault(); // IMPEDE O SUBMIT DO FORMULÁRIO
+            
+            const data = document.getElementById('data-agendamento').value;
+            const hora = document.getElementById('hora-agendamento').value;
+            const tipo = document.getElementById('tipo-contato').value;
+
+            if (!data || !hora) {
+                alert('Por favor, preencha a data e o horário.');
+                return;
+            }
+            
+            const dataObj = new Date(data + "T00:00:00"); // Garante que a data seja interpretada corretamente
+            const dataFormatada = dataObj.toLocaleDateString('pt-BR');
+
+            // 4. Exibe a confirmação
+            dataAgendadaEl.textContent = `${dataFormatada} às ${hora} (via ${tipo === 'video' ? 'Vídeo' : 'Telefone'}).`;
+            confirmacaoArea.classList.remove('hidden');
+            agendamentoForm.classList.add('hidden');
+        });
+    }
+}
+
 
 // ----------------------------------------------------------------------
 // 8. INICIALIZAÇÃO DE PÁGINA
@@ -980,46 +1046,47 @@ document.addEventListener('DOMContentLoaded', () => {
     const isSolicitacaoPage = document.body.classList.contains('page-solicitacao');
     const isInvestimentosPage = document.body.classList.contains('page-investimentos');
     const isCofrinhoPage = document.body.classList.contains('page-cofrinho');
-    const isPagarPage = document.body.classList.contains('page-pagar');
+    const isPagarPage = document.body.classList.contains('page-pagar'); 
+    const isDepositarPage = document.body.classList.contains('page-depositar');
+    const isConsultoriaPage = document.body.classList.contains('page-consultoria');
 
-    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage || isInvestimentosPage || isCofrinhoPage || isDepositarPage || isPagarPage)) {
+    if (!currentAccount && (isContaPage || isTransferPage || isExtratoPage || isEmprestimoPage || isCartoesPage || isSolicitacaoPage || isInvestimentosPage || isCofrinhoPage || isPagarPage || isDepositarPage || isConsultoriaPage)) {
         window.location.href = 'login.html';
         return;
     }
 
     if (currentAccount) {
         // Lógica para conta.html (Dashboard)
-        if (isContaPage) { 
-             const greetingEl = document.getElementById('user-greeting');
-             const accountInfoEl = document.querySelector('.main-header p');
+        if (isContaPage) {
+            const greetingEl = document.getElementById('user-greeting');
+            const accountInfoEl = document.querySelector('.main-header p');
             
-             if (greetingEl) {
-                 const firstName = currentAccount.owner.split(' ')[0];
-                 greetingEl.textContent = `Olá, ${firstName} 👋`;
-             }
+            if (greetingEl) {
+                const firstName = currentAccount.owner.split(' ')[0];
+                greetingEl.textContent = `Olá, ${firstName} 👋`;
+            }
             
-             if (accountInfoEl) {
-                 const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
-                 accountInfoEl.textContent = `Agência: ${currentAccount.agency} | Conta: ${formattedAccount}`;
-             }
+            if (accountInfoEl) {
+                const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
+                accountInfoEl.textContent = `Agência: ${currentAccount.agency} | Conta: ${formattedAccount}`;
+            }
             
-             displayBalance(currentAccount);
-             displayLastTransactions(currentAccount); 
+            displayBalance(currentAccount);
+            displayLastTransactions(currentAccount);
         }
 
         // Lógica para transferir.html
-        // Lógica para transferir.html
-        if (isTransferPage) { 
-             loadRecipients(currentAccount); // Chamada para preencher a lista
-             const transferForm = document.getElementById('transfer-form');
-             if (transferForm) {
-                 transferForm.addEventListener('submit', transferHandler); 
-             }
-        }
+        if (isTransferPage) {
+            loadRecipients(currentAccount); 
+            
+            const transferForm = document.getElementById('transfer-form');
+            if (transferForm) {
+                transferForm.addEventListener('submit', transferHandler); 
+            }
         }
         
         // Lógica para extrato.html
-        if (isExtratoPage) { 
+        if (isExtratoPage) {
             const accountInfoEl = document.querySelector('.main-header p');
             const formattedAccount = currentAccount.account.toString().slice(0, 5) + '-' + currentAccount.account.toString().slice(5);
             
@@ -1047,7 +1114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Lógica para emprestimos.html (Simulação)
-        if (isEmprestimoPage) { 
+        if (isEmprestimoPage) {
             const valorInput = document.getElementById('valor');
             const parcelasSelect = document.getElementById('parcelas');
             const loanSimulator = document.getElementById('loan-simulator');
@@ -1192,5 +1259,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         }
+        // Lógica para consultoria.html
+        if (isConsultoriaPage) {
+            initializeConsultoria(currentAccount);
+            // Preenche o nome do usuário no PineBot
+            document.querySelector('.message.bot p').innerHTML = 
+                document.querySelector('.message.bot p').innerHTML.replace('Brendo', currentAccount.owner.split(' ')[0]);
+        }
     }
-);
+});

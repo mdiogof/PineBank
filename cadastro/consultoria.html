@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consultoria | Banco Pineapple</title>
+    <link rel="stylesheet" href="style-conta.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    </head>
+<body class="page-consultoria">
+    <div class="dashboard-container">
+        
+        <aside class="sidebar">
+            <div class="logo-area">
+                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small">
+            </div>
+            <nav class="main-nav">
+                <a href="conta.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
+                <a href="transferir.html" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
+                <a href="cartoes.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
+                <a href="investimentos.html" class="nav-item active"><i class="fas fa-chart-line"></i> Investimentos</a>
+                <a href="extrato.html" class="nav-item"><i class="fas fa-file-invoice"></i> Extrato</a>
+                <a href="cofrinho.html" class="nav-item"><i class="fas fa-piggy-bank"></i> Cofrinho</a>
+                <a href="#" class="nav-item logout"><i class="fas fa-sign-out-alt"></i> Sair</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="main-header">
+                <h1>Consultoria Pineapple 🤝</h1>
+                <p>Conecte-se com nossa IA ou agende uma conversa com um especialista.</p>
+            </header>
+
+            <div class="consultoria-content-grid">
+                
+                <section class="chat-bot-card">
+                    <h2>PineBot - Ajuda Imediata</h2>
+                    <div class="chat-window" id="chat-window">
+                        
+                        <div class="message bot">
+                            <span class="avatar">🍍</span>
+                            <p>Olá, Brendo! Sou o PineBot, sua IA de investimentos. Posso te ajudar com dúvidas rápidas sobre CDB, Tesouro ou como aportar. Digite sua pergunta!</p>
+                        </div>
+
+                        <div class="quick-options" id="quick-options">
+                            <button class="chat-option-btn" data-query="Qual o melhor CDB?">Qual o melhor CDB?</button>
+                            <button class="chat-option-btn" data-query="O que é Tesouro Selic?">O que é Tesouro Selic?</button>
+                            <button class="chat-option-btn" data-query="Taxas de resgate?">Taxas de resgate?</button>
+                        </div>
+                        
+                    </div>
+                    
+                    <form class="chat-input-area" id="chat-form">
+                        <input type="text" id="user-input" placeholder="Digite sua dúvida aqui...">
+                        <button type="submit" class="send-btn"><i class="fas fa-paper-plane"></i></button>
+                    </form>
+                </section>
+
+                <section class="agendamento-card">
+                    <h2>Fale com um Especialista</h2>
+                    <p class="agendamento-info">Agende um horário para falar por vídeo ou telefone com um de nossos consultores sênior.</p>
+
+                    <form id="agendamento-form">
+                        <div class="input-group">
+                            <label for="data-agendamento">Data</label>
+                            <input type="date" id="data-agendamento" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="hora-agendamento">Horário</label>
+                            <select id="hora-agendamento" required>
+                                <option value="">Selecione...</option>
+                                <option value="10:00">10:00 - Manhã</option>
+                                <option value="14:30">14:30 - Tarde</option>
+                                <option value="18:00">18:00 - Noite</option>
+                            </select>
+                        </div>
+                        
+                        <div class="input-group">
+                            <label for="tipo-contato">Tipo de Contato</label>
+                            <select id="tipo-contato" required>
+                                <option value="video">Chamada de Vídeo</option>
+                                <option value="telefone">Ligação Telefônica</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="button button-primary large-button">Agendar Consultoria</button>
+                    </form>
+                    
+                    <div id="confirmacao-agendamento" class="confirmacao-agendamento hidden">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Agendado com sucesso para <span id="data-agendada"></span>.</p>
+                        <p class="small-text">Você receberá um link no seu e-mail.</p>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="bank-system.js"></script>
+</body>
+</html>
