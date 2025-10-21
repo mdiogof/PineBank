@@ -312,3 +312,18 @@ footer .logo { color: #FFD700; }
 .audio-placeholder.playing .play-icon {
   opacity: 1;
 }
+
+@media (max-width: 768px) {
+  .secao-alternada .container,
+  .secao-alternada[data-layout="reverso"] .container {
+    flex-direction: column;
+  }
+  /* ... (regras do hero e carousel) ... */
+  .carousel-btn {
+    display: none; 
+  }
+  .carousel-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

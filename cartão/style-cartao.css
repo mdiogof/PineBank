@@ -191,3 +191,42 @@ header nav a:hover {
   transform: translateY(-2px);
   color: #FFD700; /* Garante que a cor do texto não mude no hover */
 }
+
+@media (max-width: 768px) {
+  
+  /* 1. Empilha o Cabeçalho */
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  /* 2. Empilha a Seção do Cartão */
+  .cartao-destaque {
+    flex-direction: column; /* Empilha a imagem e os benefícios */
+    padding: 40px 20px; /* Menos padding */
+  }
+  
+  /* 3. Remove o efeito 3D do cartão (pesado no mobile) */
+  .cartao-flutuante img {
+    transform: none; /* Remove o rotateY/rotateX */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+  .cartao-flutuante img:hover {
+    transform: scale(1.03); /* Efeito mais simples */
+  }
+
+  /* 4. Ajusta os textos */
+  .cartao-beneficios h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+   .cartao-beneficios p {
+    text-align: center;
+  }
+  
+  /* 5. Centraliza o carrossel de benefícios */
+  .carousel-wrapper {
+    max-width: 100%;
+  }
+}

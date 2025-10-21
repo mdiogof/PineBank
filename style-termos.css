@@ -112,3 +112,30 @@ footer .container {
 footer .logo { color: #FFD700; }
 .footer-links a { color: #f0f0f0; text-decoration: none; margin-left: 15px; }
 .footer-links a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+  
+  /* 1. Empilha o Cabeçalho */
+  header {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+  
+  /* 2. Ajusta os Títulos */
+  .conteudo-termos {
+    padding: 40px 0;
+  }
+  .conteudo-termos h1 {
+    font-size: 2.2rem;
+  }
+  .conteudo-termos h2 {
+    font-size: 1.6rem;
+  }
+
+  /* 3. Empilha o Rodapé */
+  footer .container {
+    flex-direction: column;
+    gap: 15px;
+  }
+}
