@@ -1,13 +1,12 @@
-/* Cores do Pineapple (Repita as cores do seu tema) */
+/* Variáveis de cores (Mantenha as mesmas do seu dashboard) */
 :root {
-    --amarelo-principal: #FFD700; /* Dourado/Abacaxi */
-    --verde-principal: #388e3c;   /* Verde Escuro, como na logo */
-    --cor-fundo-claro: #f8f8fa;
+    --amarelo-principal: #FFD700;
+    --verde-principal: #388e3c;
     --cor-texto: #333;
     --cor-secundaria: #6c757d;
+    --cor-fundo-claro: #f8f8fa;
 }
 
-/* Reset Básico */
 * {
     margin: 0;
     padding: 0;
@@ -16,238 +15,320 @@
 }
 
 body {
-    background-color: var(--cor-fundo-claro);
+    background-color: #fff;
     color: var(--cor-texto);
 }
 
-/* Container Principal e Layout Flexível */
-.dashboard-container {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* 1. Menu Lateral (Sidebar) */
-.sidebar {
-    width: 250px;
-    background-color: #ffffff;
-    padding: 20px 0;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
-}
-
-.logo-area {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.logo-small {
-    width: 150px;
-    height: 150px;
-}
-
-.main-nav .nav-item {
-    display: block;
-    padding: 15px 25px;
-    color: var(--cor-secundaria);
+a {
     text-decoration: none;
-    transition: background-color 0.2s, color 0.2s;
-    font-size: 1em;
+    color: var(--cor-texto);
 }
 
-.main-nav .nav-item i {
-    margin-right: 10px;
-}
-
-.main-nav .nav-item:hover {
-    background-color: #f0f0f5;
-    color: var(--verde-principal);
-}
-
-.main-nav .nav-item.active {
-    background-color: var(--amarelo-principal);
-    color: #333; /* Texto escuro no fundo amarelo */
-    font-weight: bold;
-    border-left: 5px solid var(--verde-principal);
-}
-
-/* 2. Conteúdo Principal */
-.main-content {
-    flex-grow: 1;
-    padding: 30px;
-}
-
-.invest-header {
-    margin-bottom: 30px;
-}
-
-.invest-header h1 {
-    color: var(--verde-principal);
-    font-size: 2em;
-}
-
-.invest-header p {
-    color: var(--cor-secundaria);
-}
-
-/* 3. Dashboard de Resumo */
-.summary-card {
+/* ------------------------------------------------ */
+/* 1. BARRA SUPERIOR DE NAVEGAÇÃO (Marketing) */
+/* ------------------------------------------------ */
+.marketing-top-nav {
+    background-color: var(--amarelo-principal); /* Fundo amarelo */
+    color: var(--cor-texto);
+    padding: 10px 20px;
     display: flex;
     justify-content: space-between;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    margin-bottom: 30px;
-    flex-wrap: wrap; /* Para quebrar linha em telas pequenas */
+    align-items: center;
+    border-bottom: 2px solid #ccc; 
 }
-
-.summary-item {
-    flex: 1;
-    min-width: 150px;
-    padding: 10px;
+.marketing-top-nav .logo-text-link {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--verde-principal);
+    text-decoration: none;
 }
-
-.summary-item span {
-    display: block;
-    color: var(--cor-secundaria);
+.marketing-top-nav .nav-links a,
+.marketing-top-nav .nav-links .btn-abrir-conta-nav {
+    margin-left: 15px;
+    text-decoration: none;
+    color: var(--cor-texto);
     font-size: 0.9em;
+}
+
+.marketing-top-nav .nav-links .btn-abrir-conta-nav {
+    background-color: var(--verde-principal);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.marketing-top-nav .nav-links .btn-abrir-conta-nav:hover {
+    background-color: #2e7d32;
+}
+
+
+/* ------------------------------------------------ */
+/* 2. SEÇÃO HERO GERAL (HOME/IMAGEM DE FUNDO) */
+/* ------------------------------------------------ */
+
+.hero-section {
+    /* NOTA: Use a imagem correta no seu servidor */
+    background: url('c05f1e.jpg') center center / cover no-repeat; 
+    height: 300px;
+    position: relative;
+    color: white;
+}
+
+.header-overlay {
+    background-color: rgba(0, 0, 0, 0.4); /* Escurece a imagem para o texto aparecer */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.main-title-marketing {
+    font-size: 2.5em;
+    color: #fff;
     margin-bottom: 5px;
 }
 
-.summary-item h2 {
-    font-size: 1.8em;
-    font-weight: 700;
+.subtitle-marketing {
+    font-size: 1.2em;
+    margin-bottom: 20px;
 }
 
-.positive-gain {
-    color: var(--verde-principal); /* Rentabilidade positiva em verde */
-}
-
-/* 4. Imagem de Destaque (Hero) */
-.hero-image {
-    /* O caminho da sua imagem deve ser ajustado aqui */
-    background-image: url('URL_DA_SUA_IMAGEM_ACONCHEGANTE.png'); 
-    background-size: cover;
-    background-position: center;
-    height: 250px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    display: flex;
-    align-items: center;
-    padding: 30px;
-}
-
-.image-overlay {
-    color: #ffffff;
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
-    max-width: 60%;
-}
-
-.image-overlay h2 {
-    font-size: 1.6em;
-    margin-bottom: 10px;
-}
-
-.cta-button {
+.btn-abrir-conta {
     background-color: var(--amarelo-principal);
     color: var(--cor-texto);
     border: none;
     padding: 10px 25px;
-    border-radius: 50px;
+    border-radius: 5px;
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
 }
-
-.cta-button:hover {
+.btn-abrir-conta:hover {
     background-color: #e6c300;
 }
 
-/* 5. Opções de Investimento */
-.investment-options {
-    margin-top: 40px;
+
+/* ------------------------------------------------ */
+/* 3. HERO ESPECÍFICO (Investimentos) */
+/* ------------------------------------------------ */
+
+.invest-header-hero {
+    background: url('c05f1e.jpg') center center / cover no-repeat;
+    height: 180px; 
+    position: relative;
+    color: white;
 }
 
-.investment-options h2 {
-    margin-bottom: 20px;
+
+/* ------------------------------------------------ */
+/* 4. LAYOUT PRINCIPAL DE CONTEÚDO (HOME - 3 COLUNAS) */
+/* ------------------------------------------------ */
+
+.marketing-content-wrapper {
+    display: flex;
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 20px;
+    gap: 30px;
+}
+
+/* Menu Lateral de Produtos (lado esquerdo da HOME) */
+.marketing-menu-lateral {
+    width: 200px; 
+    flex-shrink: 0;
+}
+
+.marketing-main-area {
+    flex-grow: 1; 
+    min-width: 400px;
+}
+
+.marketing-right-sidebar {
+    width: 250px; 
+    flex-shrink: 0;
+}
+
+/* Títulos das Seções */
+.marketing-main-area h2, .marketing-menu-lateral h2, .marketing-right-sidebar h2 {
     color: var(--verde-principal);
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    border-bottom: 2px solid var(--amarelo-principal);
+    padding-bottom: 5px;
 }
 
-.investment-options {
+/* Estilos do Menu Lateral de Produtos */
+.marketing-menu-lateral a {
+    display: block;
+    text-decoration: none;
+    color: var(--cor-texto);
+    padding: 8px 0;
+    border-bottom: 1px dotted #ccc;
+    font-weight: 500;
+}
+.marketing-menu-lateral a:hover {
+    color: var(--verde-principal);
+}
+
+/* Estilos das Ofertas */
+.ofertas-grid {
     display: flex;
     gap: 20px;
-    flex-wrap: wrap;
+    margin-bottom: 30px;
 }
 
-.option-card {
+.oferta-card {
     flex: 1;
-    min-width: 250px;
-    background-color: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s;
+    padding: 15px;
+    border: 1px solid var(--amarelo-principal);
+    border-radius: 8px;
+    background-color: var(--cor-fundo-claro);
 }
 
-.option-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.icon-large {
-    font-size: 2em;
-    color: var(--amarelo-principal);
-    margin-bottom: 15px;
-}
-
-.option-card h3 {
-    margin-bottom: 10px;
+.oferta-card h3 {
+    font-size: 1.1em;
+    margin-bottom: 5px;
     color: var(--verde-principal);
 }
-
-.option-card p {
+.oferta-card p {
     font-size: 0.9em;
     color: var(--cor-secundaria);
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
-
-.saiba-mais {
+.oferta-card a {
     color: var(--verde-principal);
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.85em;
 }
 
-/* 6. Responsividade */
-@media (max-width: 900px) {
-    .dashboard-container {
-        flex-direction: column; /* Menu vai para cima */
+/* Estilos da Seção Quem Somos */
+.quem-somos p {
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+.quem-somos strong {
+    color: var(--verde-principal);
+    font-weight: bold;
+}
+
+/* Estilos da Seção Notícias */
+.noticias p {
+    font-size: 0.9em;
+    margin-bottom: 8px;
+    color: var(--cor-secundaria);
+}
+
+/* ------------------------------------------------ */
+/* 5. LAYOUT DE PÁGINA ÚNICA (Marketing Investimentos) */
+/* ------------------------------------------------ */
+
+.marketing-content-wrapper-single {
+    max-width: 900px; /* Largura centralizada */
+    margin: 30px auto;
+    padding: 0 20px;
+}
+
+.invest-highlight-card {
+    background-color: var(--cor-fundo-claro);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+}
+
+.invest-highlight-card h2 {
+    font-size: 2em;
+    color: var(--verde-principal);
+    border-bottom: 3px solid var(--amarelo-principal);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.invest-highlight-card p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.invest-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.feature-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 5px solid var(--amarelo-principal);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+}
+
+.feature-item i {
+    color: var(--verde-principal);
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.feature-item h4 {
+    color: var(--cor-texto);
+    font-size: 1.1em;
+}
+
+
+/* ------------------------------------------------ */
+/* 6. RODAPÉ AMARELO */
+/* ------------------------------------------------ */
+
+.marketing-footer {
+    background-color: var(--amarelo-principal);
+    color: var(--cor-texto);
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 50px;
+}
+
+.footer-links {
+    margin-bottom: 5px;
+}
+.footer-links a {
+    color: var(--cor-texto);
+    text-decoration: none;
+    font-weight: 500;
+}
+.footer-links a:hover {
+    text-decoration: underline;
+}
+
+/* ------------------------------------------------ */
+/* 7. RESPONSIVIDADE */
+/* ------------------------------------------------ */
+
+@media (max-width: 992px) {
+    .marketing-content-wrapper {
+        flex-direction: column;
+        gap: 20px;
     }
-    .sidebar {
+    /* Em mobile, o menu lateral e a sidebar direita ocupam 100% e centralizam */
+    .marketing-menu-lateral, .marketing-right-sidebar, .marketing-main-area {
         width: 100%;
-        padding: 10px 0;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        padding: 0 20px;
     }
-    .main-nav {
-        display: flex;
-        overflow-x: auto;
-        justify-content: space-around;
-    }
-    .main-nav .nav-item {
-        padding: 10px 15px;
-        border-left: none !important;
-    }
-    .summary-card {
+    .ofertas-grid {
         flex-direction: column;
     }
-    .hero-image {
-        height: 180px;
-    }
-    .image-overlay {
-        max-width: 100%;
-        text-align: center;
-    }
-    .image-overlay h2 {
-        font-size: 1.4em;
+    .marketing-content-wrapper-single {
+        padding: 0 15px;
     }
 }

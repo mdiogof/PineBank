@@ -3,79 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investimentos | Banco Pineapple</title> 
-    <link rel="icon" type="image/x-icon" href="../icon.ico">
-    <link rel="stylesheet" href="style-investimentos.css">
+    <title>Investimentos | PineBank</title>
+    <link rel="stylesheet" href="style-investimentos.css"> 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        .invest-highlight-card {
+            background-color: var(--cor-fundo-claro);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .invest-highlight-card h2 {
+            font-size: 2em;
+            color: var(--verde-principal);
+            border-bottom: 3px solid var(--amarelo-principal);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .invest-highlight-card p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .invest-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .feature-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 5px solid var(--amarelo-principal);
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-item i {
+            color: var(--verde-principal);
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .feature-item h4 {
+            color: var(--cor-texto);
+            font-size: 1.1em;
+        }
+        
+        /* Ajuste no layout principal para centralizar */
+        .marketing-content-wrapper-single {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="dashboard-container">
-        
-        <aside class="sidebar">
-            <div class="logo-area">
-                <img src="pineapple-logo.png" alt="Logo Pineapple" class="logo-small"> </div>
-            <nav class="main-nav">
-                <a href="../index.html" class="nav-item"><i class="fas fa-home"></i> Início</a>
-                <a href="#" class="nav-item active"><i class="fas fa-chart-line"></i> Investimentos</a>
-                <a href="/cartão/cartão.html" class="nav-item"><i class="fas fa-credit-card"></i> Cartões</a>
-                <a href="#" class="nav-item"><i class="fas fa-exchange-alt"></i> Transferências</a>
-                <a href="#" class="nav-item"><i class="fas fa-user-circle"></i> Meu Perfil</a>
-            </nav>
-        </aside>
 
-        <main class="main-content">
-            <header class="invest-header">
-                <h1>Seus Investimentos 🍍</h1>
-                <p>O caminho mais doce para a sua liberdade financeira.</p>
-            </header>
+    <nav class="marketing-top-nav">
+        <a href="../index.html" class="logo-text-link">PineBank</a>
+        <div class="nav-links">
+            <button class="btn-abrir-conta-nav" onclick="window.location.href='../cadastro/login.html'">Abrir Conta</button>
+        </div>
+    </nav>
+    
+    <header class="invest-header-hero">
+        <div class="header-overlay">
+            <h1 class="main-title-marketing">Seus Investimentos 🍍</h1>
+            <p class="subtitle-marketing">Rendimento seguro e transparente, feito para o seu futuro.</p>
+        </div>
+    </header>
 
-            <section class="summary-card">
-                <div class="summary-item">
-                    <span>Saldo Total Investido</span>
-                    <h2>R$ 15.450,88</h2>
+    <div class="marketing-content-wrapper-single">
+
+        <section class="invest-highlight-card">
+            <h2>Onde seu dinheiro cresce, mesmo com pouco tempo.</h2>
+            <p>Acreditamos que investir deve ser simples e acessível. Por isso, oferecemos as melhores opções de Renda Fixa e Variável com taxas zero e a segurança que só um banco digital sólido pode oferecer.</p>
+
+            <div class="invest-features-grid">
+                <div class="feature-item">
+                    <i class="fas fa-lock"></i>
+                    <h4>Segurança e FGC</h4>
+                    <p>Muitos produtos são garantidos pelo Fundo Garantidor de Créditos (FGC), protegendo seu capital.</p>
                 </div>
-                <div class="summary-item">
-                    <span>Rentabilidade no Mês</span>
-                    <h2 class="positive-gain">+ 1,25%</h2>
+                <div class="feature-item">
+                    <i class="fas fa-chart-line"></i>
+                    <h4>Taxa Zero</h4>
+                    <p>Invista em CDBs e Tesouro Direto sem pagar taxas de custódia ou corretagem.</p>
                 </div>
-                <div class="summary-item">
-                    <span>Meus Objetivos</span>
-                    <p>Férias na Praia (70% concluído)</p>
-                </div>
-            </section>
-            
-            <div class="hero-image">
-                <div class="image-overlay">
-                    <h2>Novidade: Tesouro Selic agora com liquidez diária!</h2>
-                    <button class="cta-button">Investir Agora</button>
+                <div class="feature-item">
+                    <i class="fas fa-hand-holding-usd"></i>
+                    <h4>Comece com Pouco</h4>
+                    <p>Selecione opções a partir de R$ 1,00 para começar a formar seu patrimônio hoje mesmo.</p>
                 </div>
             </div>
-
-            <section class="investment-options">
-                <h2>Explore Opções para Seu Dinheiro</h2>
-
-                <div class="option-card renda-fixa">
-                    <i class="fas fa-money-bill-wave icon-large"></i>
-                    <h3>Renda Fixa</h3>
-                    <p>Opções seguras como CDBs, LCIs e Tesouro Direto. Ideal para reservas de emergência e objetivos de curto prazo.</p>
-                    <a href="#" class="saiba-mais">Ver Renda Fixa</a>
+        </section>
+        
+        <section class="invest-features-section">
+            <h2>Nossos Produtos em Destaque</h2>
+            <div class="ofertas-grid">
+                
+                <div class="oferta-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Renda Fixa e CDB</h3>
+                    <p>Segurança máxima para sua Reserva de Emergência com liquidez e rendimentos de até 120% do CDI.</p>
+                    <a href="#">Saiba mais »</a>
                 </div>
-
-                <div class="option-card fundos">
-                    <i class="fas fa-hand-holding-usd icon-large"></i>
+                
+                <div class="oferta-card">
+                    <i class="fas fa-chart-pie"></i>
                     <h3>Fundos de Investimento</h3>
-                    <p>Diversifique com a gestão de especialistas. Fundos multimercado, ações e mais. Ideal para longo prazo.</p>
-                    <a href="#" class="saiba-mais">Ver Fundos</a>
+                    <p>Diversificação global e gestão profissional, ideal para quem busca rentabilidade acima da média.</p>
+                    <a href="#">Saiba mais »</a>
                 </div>
-
-                <div class="option-card renda-variavel">
-                    <i class="fas fa-chart-area icon-large"></i>
+                
+                <div class="oferta-card">
+                    <i class="fas fa-rocket"></i>
                     <h3>Renda Variável</h3>
-                    <p>Invista em Ações, FIIs (Fundos Imobiliários) e ETFs. Alto potencial de retorno para perfis arrojados.</p>
-                    <a href="#" class="saiba-mais">Ver Renda Variável</a>
+                    <p>Invista em Ações, FIIs e ETFs. Plataforma completa para o investidor arrojado.</p>
+                    <a href="#">Saiba mais »</a>
                 </div>
-            </section>
-        </main>
+            </div>
+        </section>
+
     </div>
+
+    <footer class="marketing-footer">
+        <div class="footer-links">
+            <a href="termos.html">Termos de Uso</a> 
+        </div>
+        <p>© 2025 PineBank. Todos os direitos reservados.</p>
+    </footer>
 </body>
 </html>
