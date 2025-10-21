@@ -113,7 +113,7 @@ footer .logo { color: #FFD700; }
 .footer-links a { color: #f0f0f0; text-decoration: none; margin-left: 15px; }
 .footer-links a:hover { text-decoration: underline; }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   
   /* 1. Empilha o Cabeçalho */
   header {
@@ -138,4 +138,25 @@ footer .logo { color: #FFD700; }
     flex-direction: column;
     gap: 15px;
   }
+  
+}
+
+.autor-box {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+  display: block;
+}
+
+.autor-box strong {
+  display: block;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.autor-box span {
+  display: block;
+  font-size: 0.9rem;
+  color: #777;
+  margin-top: 5px;
 }

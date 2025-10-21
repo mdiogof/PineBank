@@ -152,7 +152,7 @@ header nav a:hover { text-decoration: underline; }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
 
   /* 1. Empilha o Cabeçalho */
   header {

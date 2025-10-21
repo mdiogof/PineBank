@@ -192,7 +192,7 @@ header nav a:hover {
   color: #FFD700; /* Garante que a cor do texto não mude no hover */
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   
   /* 1. Empilha o Cabeçalho */
   header {

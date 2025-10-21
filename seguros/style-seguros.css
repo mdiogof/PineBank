@@ -313,7 +313,7 @@ footer .logo { color: #FFD700; }
   opacity: 1;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
   .secao-alternada .container,
   .secao-alternada[data-layout="reverso"] .container {
     flex-direction: column;
